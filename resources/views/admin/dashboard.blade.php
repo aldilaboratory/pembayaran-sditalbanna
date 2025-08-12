@@ -74,4 +74,4 @@
           <!-- partial -->
         </div>
         <!-- main-panel ends -->
-</x-layout>
+</x-admin.layout>

@@ -63,5 +63,29 @@
     <script>
       new DataTable('#dataTable');
     </script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      document.querySelectorAll('.delete-btn').forEach(button => {
+          button.addEventListener('click', function() {
+              const id = this.getAttribute('data-id');
+              const name = this.getAttribute('data-name');
+              
+              Swal.fire({
+                  title: 'Apakah Anda yakin?',
+                  text: `Data kelas "${name}" akan dihapus!`,
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#d33',
+                  cancelButtonColor: '#3085d6',
+                  confirmButtonText: 'Ya, hapus!',
+                  cancelButtonText: 'Batal'
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      document.getElementById('delete-form-' + id).submit();
+                  }
+              });
+          });
+      });
+    </script> --}}
   </body>
 </html>

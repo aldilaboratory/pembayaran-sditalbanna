@@ -6,7 +6,7 @@
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Data Angkatan</h4>
-                    <button class="btn btn-primary mb-3">+ Tambah Angkatan Baru</button>
+                    <a href="{{ route('admin.data_angkatan.create') }}" class="btn btn-primary mb-3">+ Tambah Angkatan Baru</a>
                     <div class="table-responsive">
                       <table class="table table-bordered" id="dataTable">
                         <thead>
@@ -23,54 +23,24 @@
                           </tr>
                         </thead>
                         <tbody>
+                          @foreach ($schoolYears as $schoolYear)
                           <tr>
                             <td class="text-center">
-                              1
-                            </td>
-                            <td>
-                              2021/2022
+                              {{ $loop->iteration }}
                             </td>
                             <td class="text-center">
-                              <a href="#" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
+                              {{ $schoolYear->school_year }}
+                            </td>
+                            <td class="text-center">
+                              <a href="{{ route('admin.data_angkatan.edit', $schoolYear->id) }}" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
+                              <form action="{{ route('admin.data_angkatan.destroy', $schoolYear->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus angkatan {{ $schoolYear->school_year }}?')"><i class="mdi mdi-delete align-middle"></i> Hapus</button>
+                              </form>
                             </td>
                           </tr>
-                          <tr>
-                            <td class="text-center">
-                              2
-                            </td>
-                            <td>
-                              2022/2023
-                            </td>
-                            <td class="text-center">
-                              <a href="#" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              3
-                            </td>
-                            <td>
-                              2023/2024
-                            </td>
-                            <td class="text-center">
-                              <a href="#" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              4
-                            </td>
-                            <td>
-                              2024/2025
-                            </td>
-                            <td class="text-center">
-                              <a href="#" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
-                            </td>
-                          </tr>
+                          @endforeach
                         </tbody>
                       </table>
                     </div>

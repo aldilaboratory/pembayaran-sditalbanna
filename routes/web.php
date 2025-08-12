@@ -46,15 +46,45 @@ Route::prefix('siswa')->group(function() {
 
 // Route untuk Admin
 Route::prefix('admin')->group(function() {
+    // Route untuk Dashboard
     Route::get('/', function () {
         return redirect()->route('admin.dashboard');
     });
     Route::get('/dashboard', [DashboardAdminController::class, 'index'])->name('admin.dashboard');
+
+    // Route untuk Data Siswa
     Route::get('/data_siswa', [DataSiswaAdminController::class, 'index'])->name('admin.data_siswa');
+
+    // Route untuk Data Tagihan Siswa
     Route::get('/data_tagihan_siswa', [DataTagihanSiswaAdminController::class, 'index'])->name('admin.data_tagihan_siswa');
+
+    // Route untuk Laporan Tunggakan Siswa
     Route::get('/laporan_tunggakan_siswa', [LaporanTunggakanSiswaController::class, 'index'])->name('admin.laporan_tunggakan_siswa');
+    
+    // Route untuk Laporan Penerimaan
     Route::get('/laporan_penerimaan', [LaporanPenerimaanController::class, 'index'])->name('admin.laporan_penerimaan');
+
+    // Route untuk Data Kelas
     Route::get('/data_kelas', [DataKelasController::class, 'index'])->name('admin.data_kelas');
+    Route::get('/data_kelas/create', [DataKelasController::class, 'create'])->name('admin.data_kelas.create');
+    Route::get('/data_kelas/{id}/edit', [DataKelasController::class, 'edit'])->name('admin.data_kelas.edit');
+    Route::put('/data_kelas/{id}', [DataKelasController::class, 'update'])->name('admin.data_kelas.update');
+    Route::delete('/data_kelas/{id}', [DataKelasController::class, 'destroy'])->name('admin.data_kelas.destroy');
+    Route::post('/data_kelas', [DataKelasController::class, 'store'])->name('admin.data_kelas.store');
+    
+    // Route untuk Data Angkatan
     Route::get('/data_angkatan', [DataAngkatanController::class, 'index'])->name('admin.data_angkatan');
+    Route::get('/data_angkatan/create', [DataAngkatanController::class, 'create'])->name('admin.data_angkatan.create');
+    Route::get('/data_angkatan/{id}/edit', [DataAngkatanController::class, 'edit'])->name('admin.data_angkatan.edit');
+    Route::put('/data_angkatan/{id}', [DataAngkatanController::class, 'update'])->name('admin.data_angkatan.update');
+    Route::delete('/data_angkatan/{id}', [DataAngkatanController::class, 'destroy'])->name('admin.data_angkatan.destroy');
+    Route::post('/data_angkatan', [DataAngkatanController::class, 'store'])->name('admin.data_angkatan.store');
+
+    // Route untuk Data Tahun Ajaran
     Route::get('/data_tahun_ajaran', [DataTahunAjaranController::class, 'index'])->name('admin.data_tahun_ajaran');
+    Route::get('/data_tahun_ajaran/create', [DataTahunAjaranController::class, 'create'])->name('admin.data_tahun_ajaran.create');
+    Route::get('/data_tahun_ajaran/{id}/edit', [DataTahunAjaranController::class, 'edit'])->name('admin.data_tahun_ajaran.edit');
+    Route::put('/data_tahun_ajaran/{id}', [DataTahunAjaranController::class, 'update'])->name('admin.data_tahun_ajaran.update');
+    Route::delete('/data_tahun_ajaran/{id}', [DataTahunAjaranController::class, 'destroy'])->name('admin.data_tahun_ajaran.destroy');
+    Route::post('/data_tahun_ajaran', [DataTahunAjaranController::class, 'store'])->name('admin.data_tahun_ajaran.store');
 });

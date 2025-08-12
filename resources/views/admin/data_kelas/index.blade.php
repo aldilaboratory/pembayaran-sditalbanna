@@ -6,7 +6,7 @@
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Data Kelas</h4>
-                    <button class="btn btn-primary mb-3">+ Tambah Kelas Baru</button>
+                    <a class="btn btn-primary mb-3" href="{{ route('admin.data_kelas.create') }}">+ Tambah Kelas Baru</a>
                     <div class="table-responsive">
                       <table class="table table-bordered" id="dataTable">
                         <thead>
@@ -23,54 +23,24 @@
                           </tr>
                         </thead>
                         <tbody>
+                          @foreach ($classes as $class)
                           <tr>
                             <td class="text-center">
-                              1
+                              {{ $loop->iteration }}
                             </td>
                             <td>
-                              1 Abu Bakar
+                              {{ $class->class }}
                             </td>
                             <td class="text-center">
-                              <a href="#" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
+                              <a href="{{ route('admin.data_kelas.edit', $class->id) }}" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
+                              <form action="{{ route('admin.data_kelas.destroy', $class->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus kelas {{ $class->class }}?')"><i class="mdi mdi-delete align-middle"></i> Hapus</button>
+                              </form>
                             </td>
                           </tr>
-                          <tr>
-                            <td class="text-center">
-                              2
-                            </td>
-                            <td>
-                              1 Umar
-                            </td>
-                            <td class="text-center">
-                              <a href="#" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              3
-                            </td>
-                            <td>
-                              1 Utsman
-                            </td>
-                            <td class="text-center">
-                              <a href="#" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              4
-                            </td>
-                            <td>
-                              1 Ali
-                            </td>
-                            <td class="text-center">
-                              <a href="#" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
-                            </td>
-                          </tr>
+                          @endforeach
                         </tbody>
                       </table>
                     </div>
