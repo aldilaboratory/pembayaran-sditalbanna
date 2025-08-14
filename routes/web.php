@@ -54,6 +54,11 @@ Route::prefix('admin')->group(function() {
 
     // Route untuk Data Siswa
     Route::get('/data_siswa', [DataSiswaAdminController::class, 'index'])->name('admin.data_siswa');
+    Route::get('/data_siswa/create', [DataSiswaAdminController::class, 'create'])->name('admin.data_siswa.create');
+    Route::get('/data_siswa/{id}/edit', [DataSiswaAdminController::class, 'edit'])->name('admin.data_siswa.edit');
+    Route::put('/data_siswa/{id}', [DataSiswaAdminController::class, 'update'])->name('admin.data_siswa.update');
+    Route::delete('/data_siswa/{id}', [DataSiswaAdminController::class, 'destroy'])->name('admin.data_siswa.destroy');
+    Route::post('/data_siswa', [DataSiswaAdminController::class, 'store'])->name('admin.data_siswa.store');
 
     // Route untuk Data Tagihan Siswa
     Route::get('/data_tagihan_siswa', [DataTagihanSiswaAdminController::class, 'index'])->name('admin.data_tagihan_siswa');

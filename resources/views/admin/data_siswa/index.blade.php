@@ -3,25 +3,31 @@
           <div class="content-wrapper">
             <div class="row">
               <div class="col-12 grid-margin">
-                <button class="btn btn-primary mb-3">+ Tambah Data</button>
                 <div class="card rounded">
                   <div class="card-body">
                     <h4 class="card-title">Data Siswa</h4>
+                    <a href="{{ route('admin.data_siswa.create') }}" class="btn btn-primary mb-3">+ Tambah Data Siswa</a>
                     <div class="table-responsive mt-3">
                       <table class="table table-bordered" id="dataTable">
                         <thead>
                           <tr>
                             <th class="text-center">
-                              NIS
+                              #
                             </th>
                             <th class="text-center">
                               Nama Siswa
                             </th>
                             <th class="text-center">
-                              Tahun Ajaran
+                              NIS
                             </th>
                             <th class="text-center">
                               Kelas
+                            </th>
+                            <th class="text-center">
+                              Angkatan
+                            </th>
+                            <th class="text-center">
+                              Tahun Ajaran
                             </th>
                             <th class="text-center">
                               Aksi
@@ -29,46 +35,24 @@
                           </tr>
                         </thead>
                         <tbody>
+                          @foreach ($students as $student)
                           <tr>
-                            <td class="text-center">2021090310136</td>
-                            <td>Annisa Suryawati</td>
-                            <td class="text-center">2021/2022</td>
-                            <td>4 Umar</td>
+                            <td class="text-center">{{ $loop->iteration }}</td>
+                            <td>{{ $student->nama }}</td>
+                            <td class="text-center">{{ $student->nis }}</td>
+                            <td>{{ $student->studentClass->class }}</td>
+                            <td class="text-center">{{ $student->schoolYear->school_year }}</td>
+                            <td class="text-center">{{ $student->academicYear->academic_year }}</td>
                             <td class="text-center">
-                              <a href="admin-detail-data-siswa.html" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
+                              <a href="{{ route('admin.data_siswa.edit', $student->id) }}" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
+                              <form action="{{ route('admin.data_siswa.destroy', $student->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data {{ $student->nama }}?')"><i class="mdi mdi-delete align-middle"></i> Hapus</button>
+                              </form>
                             </td>
                           </tr>
-                          <tr>
-                            <td class="text-center">2021090310111</td>
-                            <td>Bagus Surya</td>
-                            <td class="text-center">2021/2022</td>
-                            <td>4 Umar</td>
-                            <td class="text-center">
-                              <a href="admin-detail-data-siswa.html" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">2021090310112</td>
-                            <td>Jakky Ali</td>
-                            <td class="text-center">2021/2022</td>
-                            <td>4 Ali</td>
-                            <td class="text-center">
-                              <a href="admin-detail-data-siswa.html" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">2021090310113</td>
-                            <td>Desta Mahendra</td>
-                            <td class="text-center">2022/2023</td>
-                            <td>4 Umar</td>
-                            <td class="text-center">
-                              <a href="admin-detail-data-siswa.html" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <a class="btn btn-danger btn-sm"><i class="mdi mdi-delete align-middle"></i> Hapus</a>
-                            </td>
-                          </tr>
+                          @endforeach
                         </tbody>
                       </table>
                     </div>

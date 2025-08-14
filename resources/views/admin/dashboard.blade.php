@@ -8,27 +8,27 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-md-2 grid-margin stretch-card">
+              <div class="col-4 grid-margin stretch-card">
                 <div class="card border-primary rounded">
                   <div class="card-body">
                     <p class="card-text">Jumlah Siswa</p>
-                    <h2 class="card-text text-primary">84</h2>
+                    <h3 class="card-text text-primary">84</h3>
                   </div>
                 </div>
               </div>
-              <div class="col-md-2 grid-margin stretch-card">
+              <div class="col-4 grid-margin stretch-card">
                 <div class="card border-success rounded">
                   <div class="card-body">
                     <p class="card-text">Jumlah Pembayaran Lunas</p>
-                    <h3 class="card-text text-success">Rp252.000.000</h3>
+                    <h5 class="card-text text-success">Rp252.000.000</h5>
                   </div>
                 </div>
               </div>
-              <div class="col-md-2 grid-margin stretch-card">
+              <div class="col-4 grid-margin stretch-card">
                 <div class="card border-danger rounded">
                   <div class="card-body">
                     <p class="card-text">Jumlah Tunggakan Siswa</p>
-                    <h3 class="card-text text-danger">Rp26.000.000</h3>
+                    <h5 class="card-text text-danger">Rp26.000.000</h5>
                   </div>
                 </div>
               </div>

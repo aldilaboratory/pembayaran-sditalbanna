@@ -12,4 +12,8 @@ class SchoolYear extends Model
     protected $fillable = [
         'school_year'
     ];
+
+    public function student() {
+        return $this->hasMany(Student::class, 'school_year_id');
+    }
 }

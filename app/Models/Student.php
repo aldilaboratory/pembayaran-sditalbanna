@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Student extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'nama',
+        'nis',
+        'user_id',
+        'class_id',
+        'school_year_id',
+        'academic_year_id',
+        'nik',
+        'tempat_lahir',
+        'tanggal_lahir',
+        'jenis_kelamin',
+        'agama',
+        'alamat',
+        'kewarganegaraan',
+        'tinggal_dengan',
+        'nama_ibu_kandung',
+        'nama_ayah_kandung',
+        'nama_wali',
+        'nomor_whatsapp_orang_tua_wali',
+    ];
+
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    
+    public function studentClass() {
+        return $this->belongsTo(StudentClass::class, 'class_id');
+    }
+
+    public function schoolYear() {
+        return $this->belongsTo(SchoolYear::class, 'school_year_id');
+    }
+
+    public function academicYear() {
+        return $this->belongsTo(AcademicYear::class, 'academic_year_id');
+    }
+}
