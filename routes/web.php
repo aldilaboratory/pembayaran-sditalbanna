@@ -1,6 +1,7 @@
 <?php
 
-
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 // Route untuk Siswa
 use App\Http\Controllers\Siswa\DashboardController;
@@ -29,12 +30,47 @@ use App\Http\Controllers\Admin\Data_Tahun_Ajaran\DataTahunAjaranController;
 |
 */
 
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
+
+// Route untuk guest (belum login)
+Route::middleware('guest')->group(function() {
+    Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+});
+
+// Route logout untuk semua user yang sudah login
+Route::middleware('auth')->group(function() {
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+});
+
+// Redirect root berdasarkan auth status
 Route::get('/', function () {
-        return redirect()->route('siswa.dashboard');
-    });
+    if (Auth::check()) {
+        if (Auth::user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        } elseif (Auth::user()->isSiswa()) {
+            return redirect()->route('siswa.dashboard');
+        } elseif (Auth::user()->isKepalaSekolah()) {
+            return redirect()->route('kepala_sekolah.dashboard');
+        }
+    }
+    return redirect()->route('login');
+});
 
 // Route untuk Siswa
-Route::prefix('siswa')->group(function() {
+Route::middleware(['auth', 'siswa'])->prefix('siswa')->group(function() {
     Route::get('/', function () {
         return redirect()->route('siswa.dashboard');
     });
@@ -45,7 +81,7 @@ Route::prefix('siswa')->group(function() {
 });
 
 // Route untuk Admin
-Route::prefix('admin')->group(function() {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     // Route untuk Dashboard
     Route::get('/', function () {
         return redirect()->route('admin.dashboard');
@@ -93,3 +129,5 @@ Route::prefix('admin')->group(function() {
     Route::delete('/data_tahun_ajaran/{id}', [DataTahunAjaranController::class, 'destroy'])->name('admin.data_tahun_ajaran.destroy');
     Route::post('/data_tahun_ajaran', [DataTahunAjaranController::class, 'store'])->name('admin.data_tahun_ajaran.store');
 });
+
+require __DIR__.'/auth.php';

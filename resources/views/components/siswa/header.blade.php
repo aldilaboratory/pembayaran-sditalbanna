@@ -101,16 +101,22 @@
                   src="{{ asset('images/avatar.png') }}"
                   alt="profile"
                 />
-                <span class="nav-profile-name">Annisa Suryawati</span>
+                <span class="nav-profile-name">{{ Auth::user()->name }}</span>
               </a>
               <div
                 class="dropdown-menu dropdown-menu-right navbar-dropdown"
                 aria-labelledby="profileDropdown"
               >
-                <a class="dropdown-item">
-                  <i class="mdi mdi-logout text-primary"></i>
-                  Logout
-                </a>
+                <!-- Authentication -->
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <x-dropdown-link :href="route('logout')"
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                        {{ __('Log Out') }}
+                    </x-dropdown-link>
+                </form>
               </div>
             </li>
           </ul>

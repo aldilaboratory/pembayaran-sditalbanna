@@ -40,7 +40,28 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        // 'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function student() {
+        return $this->hasOne(Student::class, 'user_id', 'id');
+    }
+
+    public function isAdmin() {
+        return $this->role === 'admin';
+    }
+
+    public function isSiswa() {
+        return $this->role === 'siswa';
+    }
+
+    public function isKepalaSekolah() {
+        return $this->role === 'kepala_sekolah';
+    }
+
+    // method untuk cek apakah user memiliki/ber relasi dengan data student
+    public function hasStudent() {
+        return $this->student()->exists();
+    }
 }

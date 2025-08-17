@@ -10,4 +10,9 @@ class DataTagihanSiswaAdminController extends Controller
     public function index() {
         return view('admin.data_tagihan_siswa.index');
     }
+
+    public function create() {
+        return view('admin.data_tagihan_siswa.index');
+    }
+
 }

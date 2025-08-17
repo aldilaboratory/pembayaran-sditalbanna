@@ -9,7 +9,7 @@
                 <div class="d-flex justify-content-between flex-wrap">
                   <div class="d-flex align-items-end flex-wrap">
                     <div class="me-md-3 me-xl-5">
-                      <h2>Selamat Datang, Ayah/Bunda <span class="fw-bold">Annisa Suryawati</span></h2>
+                      <h2>Selamat Datang, Ayah/Bunda <span class="fw-bold">{{ Auth::user()->name }}</span></h2>
                       <p class="mb-md-0">Informasi Umum Peserta Didik</p>
                     </div>
                   </div>
@@ -24,19 +24,27 @@
                     <table class="table table-bordered">
                       <tr>
                         <td>NIS</td>
-                        <td>2021090310136</td>
+                        <td>{{ $user->student->nis }}</td>
                       </tr>
                       <tr>
                         <td>Nama</td>
-                        <td>Annisa Suryawati</td>
+                        <td>{{ $user->name }}</td>
                       </tr>
                       <tr>
                         <td>Kelas</td>
-                        <td>4 Umar</td>
+                        <td>{{ $user->student->studentClass->class }}</td>
                       </tr>
                       <tr>
                         <td>Tahun Ajaran</td>
-                        <td>2021/2022</td>
+                        <td>{{ $user->student->academicYear->academic_year }}</td>
+                      </tr>
+                      <tr>
+                        <td>Angkatan</td>
+                        <td>{{ $user->student->schoolYear->school_year }}</td>
+                      </tr>
+                      <tr>
+                        <td>Status</td>
+                        <td>Aktif</td>
                       </tr>
                       <tr>
                         <td>Tagihan</td>

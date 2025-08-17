@@ -32,7 +32,6 @@ class DataSiswaAdminController extends Controller
     }
 
     public function store(StoreStudentsRequest $request) {
-
         DB::beginTransaction();
 
         try {

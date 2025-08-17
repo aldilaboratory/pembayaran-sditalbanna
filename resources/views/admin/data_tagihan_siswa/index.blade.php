@@ -2,15 +2,21 @@
 <div class="main-panel">
           <div class="content-wrapper">
             <div class="row">
+              <div class="col-md-12">
+                <button class="btn btn-primary mb-3">+ Input Tagihan Siswa Sekaligus</button>
+              </div>
+            </div>
+            <div class="row">
               <div class="col-md-12 grid-margin stretch-card">
                 <div class="card rounded">
                   <div class="card-body">
                     <div class="form-group">
+                      <h4 class="card-title">CARI INFORMASI DATA TAGIHAN SISWA</h4>
                       <div class="input-group">
-                        <label class="col-form-label me-5">NIS</label>
-                        <input type="number" class="form-control" placeholder="Masukkan NISN Siswa" value="2021090310136">
+                        <label class="col-form-label me-5">NIS atau Nama</label>
+                        <input type="text" class="form-control rounded-start-2" placeholder="Masukkan NIS atau Nama siswa" value="">
                         <div class="input-group-append">
-                          <button class="btn btn-sm btn-primary" type="button">Search</button>
+                          <button class="btn btn-sm btn-primary rounded-end-2" type="button">Search</button>
                         </div>
                       </div>
                     </div>
@@ -50,7 +56,7 @@
                 <div class="card rounded">
                   <div class="card-body">
                     <h4 class="card-title">Data Tagihan</h4>
-                    <button class="btn btn-primary mb-3">+ Input Pembayaran Offline</button>
+                    <button class="btn btn-primary mb-3">+ Siswa Ingin Membayar Secara Offline</button>
                     <div class="table-responsive">
                       <table class="table table-bordered" id="dataTable">
                         <thead>
