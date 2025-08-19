@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('siswa.dashboard'));
         } elseif (Auth::user()->isKepalaSekolah()) {
             return redirect()->intended(route('kepala_sekolah.dashboard'));
-        }
+        }   
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

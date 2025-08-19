@@ -45,4 +45,8 @@ class Student extends Model
     public function academicYear() {
         return $this->belongsTo(AcademicYear::class, 'academic_year_id');
     }
+
+    public function schoolFee() {
+        return $this->hasMany(SchoolFee::class, 'student_id', 'id');
+    }
 }

@@ -4,7 +4,7 @@
           <div class="content-wrapper">
             <div class="row">
               <div class="col-md-12 grid-margin">
-                <h2>Dashboard Admin</h2>
+                <h2>Dashboard Admin,  <span class="fw-bold">{{ Auth::user()->name }}</span></h2>
               </div>
             </div>
             <div class="row">

@@ -98,6 +98,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
 
     // Route untuk Data Tagihan Siswa
     Route::get('/data_tagihan_siswa', [DataTagihanSiswaAdminController::class, 'index'])->name('admin.data_tagihan_siswa');
+    Route::get('/data_tagihan_siswa/create', [DataTagihanSiswaAdminController::class, 'create'])->name('admin.data_tagihan_siswa.create');
+    Route::post('/data_tagihan_siswa/store', [DataTagihanSiswaAdminController::class, 'store'])->name('admin.data_tagihan_siswa.store');
+    Route::get('/data_tagihan_siswa/autocomplete', [DataTagihanSiswaAdminController::class, 'autocomplete'])->name('admin.data_tagihan_siswa.autocomplete');
+    Route::post('/data_tagihan_siswa', [DataTagihanSiswaAdminController::class, 'searchById'])->name('admin.data_tagihan_siswa.search.byId');
+    Route::post('/data_tagihan_siswa/search', [DataTagihanSiswaAdminController::class, 'search'])->name('admin.data_tagihan_siswa.search');
 
     // Route untuk Laporan Tunggakan Siswa
     Route::get('/laporan_tunggakan_siswa', [LaporanTunggakanSiswaController::class, 'index'])->name('admin.laporan_tunggakan_siswa');
