@@ -49,4 +49,13 @@ class Student extends Model
     public function schoolFee() {
         return $this->hasMany(SchoolFee::class, 'student_id', 'id');
     }
+
+    public function transaction() {
+        return $this->hasMany(Transaction::class, 'student_id', 'id');
+    }
+
+    public function pendingTransactions()
+    {
+        return $this->transactions()->where('status', 'pending');
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 // Route untuk Siswa
@@ -69,6 +70,10 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// Webhook routes
+Route::post('/midtrans/notification', [MidtransController::class, 'notification']);
+Route::get('/midtrans/finish', [MidtransController::class, 'finish']);
+
 // Route untuk Siswa
 Route::middleware(['auth', 'siswa'])->prefix('siswa')->group(function() {
     Route::get('/', function () {
@@ -78,6 +83,15 @@ Route::middleware(['auth', 'siswa'])->prefix('siswa')->group(function() {
     Route::get('/profil', [ProfilController::class, 'index'])->name('siswa.profil.index');
     Route::get('/tagihan', [TagihanController::class, 'index'])->name('siswa.tagihan.index');
     Route::get('/riwayat-pembayaran', [PembayaranController::class, 'index'])->name('siswa.pembayaran.index');
+
+    // Routes pembayaran - perbaiki parameter
+    Route::post('/tagihan/{tagihanId}/process', [TagihanController::class, 'process'])->name("checkout-process");
+    Route::get('/checkout/{transaction}', [TagihanController::class, 'checkout'])->name("checkout");
+
+    // Payment callback routes
+    Route::get('/payment/finish', [MidtransController::class, 'finish'])->name('siswa.payment.finish');
+    Route::get('/payment/unfinish', [MidtransController::class, 'unfinish'])->name('siswa.payment.unfinish');
+    Route::get('/payment/error', [MidtransController::class, 'error'])->name('siswa.payment.error');
 });
 
 // Route untuk Admin

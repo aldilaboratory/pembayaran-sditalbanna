@@ -36,6 +36,10 @@ class SchoolFee extends Model
         return $this->belongsTo(AcademicYear::class, 'academic_year_id', 'id');
     }
 
+    public function transaction() {
+        return $this->hasMany(Transaction::class, 'school_fee_id', 'id');
+    }
+
     // Helper method untuk nama bulan
     public function getNamaBulanAttribute() {
         $bulan = [
@@ -46,6 +50,18 @@ class SchoolFee extends Model
         ];
         
         return $bulan[$this->bulan] ?? '';
+    }
+
+    // Helper method untuk jenis tagihan
+    public function getJenisTagihanLabelAttribute()
+    {
+        $labels = [
+            'spp' => 'SPP',
+            'daftar_ulang' => 'Daftar Ulang',
+            'biaya_operasional' => 'Biaya Operasional',
+        ];
+        
+        return $labels[$this->jenis_tagihan] ?? $this->jenis_tagihan;
     }
 
     // Helper untuk format display

@@ -38,98 +38,70 @@
                           </tr>
                         </thead>
                         <tbody>
+                          @foreach ($tagihanSiswa as $tagihan)
                           <tr>
                             <td class="text-center">
-                              1
+                              {{ $loop->iteration }}
                             </td>
                             <td>
-                              Januari 2022
+                              {{ $tagihan->nama_bulan }}
                             </td>
                             <td>
-                              SPP
+                              {{ $tagihan->jenis_tagihan_label }}
                             </td>
                             <td class="text-end">
-                              Rp3.000.000
-                            </td>
-                            <td>
-                              19 Oktober 2021
-                            </td>
-                            <td>
-                              22 Januari 2022
-                            </td>
-                            <td class="text-center">
-                              <label class="badge badge-success">Lunas</label>
-                            </td>
-                            <td class="text-center">
-                              <a href="detail-transaksi.html" class="btn btn-light text-center btn-sm"><i class="mdi mdi-history align-middle"></i> Lihat Detail Transaksi</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              2
-                            </td>
-                            <td>
-                              Februari 2022
-                            </td>
-                            <td>
-                              SPP
+                              Rp{{ number_format($tagihan->jumlah) }}
                             </td>
                             <td class="text-end">
-                              Rp3.000.000
-                            </td>
-                            <td>
-                              19 Oktober 2021
-                            </td>
-                            <td>
-                              -
-                            </td>
-                            <td class="text-center">
-                              <label class="badge badge-danger">Belum Lunas</label>
-                            </td>
-                            <td class="text-center">
-                              <a href="tagihan-checkout.html" class="btn btn-info btn-sm"><i class="mdi mdi-cash align-middle"></i> Bayar</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              3
-                            </td>
-                            <td>
-                              Maret 2022
-                            </td>
-                            <td>
-                              SPP
+                              {{ $tagihan->jatuh_tempo ? \Carbon\Carbon::parse($tagihan->jatuh_tempo)->format('d F Y') : '-' }}
                             </td>
                             <td class="text-end">
-                              Rp3.000.000
+                              {{ $tagihan->tanggal_lunas ? \Carbon\Carbon::parse($tagihan->tanggal_lunas)->format('d F Y') : '-' }}
                             </td>
-                            <td>
-                              19 Oktober 2021
-                            </td>
-                            <td>
-                              -
-                            </td>
-                            <td class="text-center">
-                              <label class="badge badge-danger">Belum Lunas</label>
-                            </td>
-                            <td class="text-center">
-                              <a href="tagihan-checkout.html" class="btn btn-info btn-sm"><i class="mdi mdi-cash align-middle"></i> Bayar</a>
-                            </td>
+                            @if ($tagihan->status === 'lunas')
+                              <td class="text-center">
+                                <label class="badge badge-success">Lunas</label>
+                              </td>
+                              <td class="text-center">
+                                <a href="detail-transaksi.html" class="btn btn-light text-center btn-sm"><i class="mdi mdi-history align-middle"></i> Lihat Detail Transaksi</a>
+                              </td>
+                            @elseif ($tagihan->status === 'belum_lunas')
+                              <td class="text-center">
+                                @php
+                                  // Cek apakah ada transaksi pending untuk tagihan ini
+                                  $pendingTransaction = \App\Models\Transaction::where('school_fee_id', $tagihan->id)
+                                                                            ->where('student_id', $student->id)
+                                                                            ->where('status', 'pending')
+                                                                            ->first();
+                                @endphp
+                                @if ($pendingTransaction)
+                                  <label class="badge badge-warning">Menunggu Pembayaran</label>
+                                @else
+                                  <label class="badge badge-danger">Belum Lunas</label>
+                                @endif
+                              </td>
+                              <td class="text-center">
+                                @if ($pendingTransaction)
+                                  <!-- Jika ada transaksi pending, lanjutkan pembayaran -->
+                                  <a href="{{ route('checkout', $pendingTransaction->id) }}" 
+                                    class="btn btn-warning text-center btn-sm">
+                                    <i class="mdi mdi-clock-outline align-middle"></i> Lanjutkan Pembayaran
+                                  </a>
+                                @else
+                                  <!-- Jika belum ada transaksi, buat pembayaran baru -->
+                                  <form action="{{ route('checkout-process', $tagihan->id) }}" 
+                                        method="POST" 
+                                        style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-info text-center btn-sm">
+                                      <i class="mdi mdi-cash align-middle"></i> Bayar
+                                    </button>
+                                  </form>
+                                @endif
+                              </td>
+                            @endif
                           </tr>
-                          <tr>
-                            <td class="text-center">4</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-end">
-                              <p class="fs-5">Total Tagihan Belum Lunas: <span class="fw-bold fs-4">Rp6.000.000</span></p>
-                            </td>
-                            <td class="text-center">
-                              <a href="tagihan-checkout.html" class="btn btn-info btn-sm"><i class="mdi mdi-cash align-middle"></i> Bayar Sekaligus</a>
-                            </td>
-                          </tr>
+                          @endforeach
                         </tbody>
                       </table>
                     </div>

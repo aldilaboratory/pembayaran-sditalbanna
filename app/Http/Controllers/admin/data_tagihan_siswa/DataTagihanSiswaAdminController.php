@@ -132,7 +132,7 @@ class DataTagihanSiswaAdminController extends Controller
             DB::commit();
             $count = $students->count();
             return redirect()
-                ->route('admin.data_tagihan_siswa')
+                ->route('admin.data_tagihan_siswa.create')
                 ->with('success', "Berhasil membuat tagihan untuk {$count} siswa aktif.");
 
         } catch (\Exception $e) {
