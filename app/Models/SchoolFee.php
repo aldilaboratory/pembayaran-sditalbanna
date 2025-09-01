@@ -59,6 +59,7 @@ class SchoolFee extends Model
             'spp' => 'SPP',
             'daftar_ulang' => 'Daftar Ulang',
             'biaya_operasional' => 'Biaya Operasional',
+            'biaya_pengembangan' => 'Biaya Pengembangan',
         ];
         
         return $labels[$this->jenis_tagihan] ?? $this->jenis_tagihan;

@@ -15,6 +15,10 @@ class Transaction extends Model
         'school_fee_id',
         'jumlah',
         'status',
+        'payment_type',
+        'paid_at',
+        'canceled_at',
+        'expired_at',
         'snap_token',
     ];
 
@@ -25,10 +29,4 @@ class Transaction extends Model
     public function schoolFee() {
         return $this->belongsTo(SchoolFee::class, 'school_fee_id', 'id');
     }
-
-    const STATUS_PENDING = 'pending';
-    const STATUS_SUCCESS = 'success';
-    const STATUS_EXPIRED = 'expired';
-    const STATUS_FAILED = 'failed';
-    const STATUS_CANCELED = 'canceled';
 }

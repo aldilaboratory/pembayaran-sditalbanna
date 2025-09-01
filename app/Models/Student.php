@@ -54,8 +54,7 @@ class Student extends Model
         return $this->hasMany(Transaction::class, 'student_id', 'id');
     }
 
-    public function pendingTransactions()
-    {
+    public function pendingTransactions() {
         return $this->transactions()->where('status', 'pending');
     }
 }

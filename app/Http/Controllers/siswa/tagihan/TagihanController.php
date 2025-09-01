@@ -88,23 +88,26 @@ class TagihanController extends Controller
                     'name' => $schoolFee->jenis_tagihan_label . ' - ' . $schoolFee->nama_bulan,
                 ]
             ],
+            'expiry' => array(
+                'start_time' => date('Y-m-d H:i:s O'),
+                'unit' => 'minute', 
+                'duration' => 1
+            ),
             'callbacks' => [
-                'finish' => route('siswa.payment.finish'),
-                'unfinish' => route('siswa.payment.unfinish'),
-                'error' => route('siswa.payment.error'),
+                'finish' => route('midtrans.finish'),
+                'unfinish' => route('midtrans.unfinish'),
+                'error' => route('midtrans.error'),
             ],
         ];
         
         try {
-            // Dapatkan Snap Token
             // Debug parameter sebelum kirim ke Midtrans
             Log::info('Midtrans params:', $params);
             
             // Dapatkan Snap Token
             $snapToken = \Midtrans\Snap::getSnapToken($params);
-            
             Log::info('Generated snap token:', ['token' => $snapToken]);
-            $snapToken = \Midtrans\Snap::getSnapToken($params);
+
             $transaction->snap_token = $snapToken;
             $transaction->save();
 

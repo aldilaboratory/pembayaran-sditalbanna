@@ -32,66 +32,38 @@
                           </tr>
                         </thead>
                         <tbody>
+                          @foreach ($transactions as $transaction)
                           <tr>
                             <td class="text-center">
-                              1
+                              {{ $loop->iteration }}
                             </td>
                             <td>
-                              22 Januari 2022
+                              {{ $transaction->paid_at }}
                             </td>
                             <td>
-                              ABN-325
+                              {{ $transaction->snap_token }}
                             </td>
                             <td class="text-end">
-                              Rp3.000.000
+                              Rp{{ number_format($transaction->jumlah) }}
                             </td>
                             <td class="text-center">
-                              <label class="badge badge-success">Pembayaran Berhasil</label>
+                              @if ($transaction['status'] == 'pending')
+                                <span class="badge bg-warning">Pending</span>
+                              @elseif ($transaction['status'] == 'success')
+                                <span class="badge bg-success">Success</span>
+                              @elseif ($transaction['status'] == 'expired')
+                                <span class="badge bg-secondary">Expired</span>
+                              @elseif ($transaction['status'] == 'failed')
+                                <span class="badge bg-danger">Failed</span>
+                              @elseif ($transaction['status'] == 'canceled')
+                                <span class="badge bg-dark">Canceled</span>
+                              @endif
                             </td>
                             <td class="text-center">
                               <a href="detail-transaksi.html" class="btn btn-light text-center btn-sm"><i class="mdi mdi-history align-middle"></i> Lihat Detail Transaksi</a>
                             </td>
                           </tr>
-                          <tr>
-                            <td class="text-center">
-                              2
-                            </td>
-                            <td>
-                              22 Februari 2022
-                            </td>
-                            <td>
-                              ABN-324
-                            </td>
-                            <td class="text-end">
-                              Rp3.000.000
-                            </td>
-                            <td class="text-center">
-                              <label class="badge badge-danger">Pembayaran Gagal</label>
-                            </td>
-                            <td class="text-center">
-                              -
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              3
-                            </td>
-                            <td>
-                              22 Maret 2022
-                            </td>
-                            <td>
-                              ABN-323
-                            </td>
-                            <td class="text-end">
-                              Rp3.000.000
-                            </td>
-                            <td class="text-center">
-                              <label class="badge badge-danger">Pembayaran Gagal</label>
-                            </td>
-                            <td class="text-center">
-                              -
-                            </td>
-                          </tr>
+                          @endforeach
                         </tbody>
                       </table>
                     </div>

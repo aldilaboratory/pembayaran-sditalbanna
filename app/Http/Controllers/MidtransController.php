@@ -12,7 +12,6 @@ class MidtransController extends Controller
     public function notification(Request $request) 
     {
         Log::info('=== MIDTRANS NOTIFICATION RECEIVED ===');
-        Log::info('Request Method: ' . $request->method());
         Log::info('Request Body: ', $request->all());
         
         \Midtrans\Config::$serverKey = config('midtrans.serverKey');
@@ -21,22 +20,21 @@ class MidtransController extends Controller
         try {
             $notification = new \Midtrans\Notification();
             
-            Log::info('Notification Object: ', [
+            Log::info('Notification details:', [
                 'order_id' => $notification->order_id,
                 'transaction_status' => $notification->transaction_status,
                 'payment_type' => $notification->payment_type,
                 'fraud_status' => $notification->fraud_status ?? 'N/A'
             ]);
 
-            // Parse order_id untuk mendapatkan transaction ID
-            // Format: SCHOOL-FEE-{transaction_id}-{timestamp}
+            // Parse order_id (INV-{transaction_id}-{timestamp})
             $orderParts = explode('-', $notification->order_id);
-            if (count($orderParts) < 3 || $orderParts[0] !== 'SCHOOL' || $orderParts[1] !== 'FEE') {
+            if (count($orderParts) < 2 || $orderParts[0] !== 'INV') {
                 Log::error('Invalid order ID format: ' . $notification->order_id);
-                return response()->json(['status' => 'error', 'message' => 'Invalid order ID format']);
+                return response()->json(['status' => 'error', 'message' => 'Invalid order ID']);
             }
 
-            $transactionId = $orderParts[2];
+            $transactionId = $orderParts[1];
             $transaction = Transaction::find($transactionId);
 
             if (!$transaction) {
@@ -46,51 +44,34 @@ class MidtransController extends Controller
 
             Log::info('Processing transaction: ' . $transaction->id . ' with status: ' . $notification->transaction_status);
 
-            // Update status berdasarkan notification dari Midtrans
+            // Update status berdasarkan notification
             switch ($notification->transaction_status) {
-                case 'capture':
-                    if ($notification->payment_type == 'credit_card') {
-                        if ($notification->fraud_status == 'challenge') {
-                            $transaction->status = 'challenge';
-                        } else {
-                            $this->setTransactionSuccess($transaction, $notification);
-                        }
-                    }
-                    break;
-
                 case 'settlement':
+                case 'capture':
                     $this->setTransactionSuccess($transaction, $notification);
                     break;
-
                 case 'pending':
                     $transaction->status = 'pending';
                     break;
-
-                case 'deny':
-                    $transaction->status = 'failed';
-                    break;
-
                 case 'expire':
-                    $transaction->status = 'expired';
+                    $this->setTransactionExpired($transaction);
                     break;
-
                 case 'cancel':
-                    $transaction->status = 'canceled';
+                    $this->setTransactionCanceled($transaction);
                     break;
-
                 case 'failure':
                     $transaction->status = 'failed';
                     break;
-
                 default:
                     $transaction->status = $notification->transaction_status;
+                    $transaction->save();
                     break;
             }
 
             $transaction->payment_type = $notification->payment_type;
             $transaction->save();
 
-            Log::info('Transaction updated successfully: ' . $transaction->id . ' to status: ' . $transaction->status);
+            Log::info('Transaction updated: ' . $transaction->id . ' to status: ' . $transaction->status);
 
             return response()->json(['status' => 'success']);
 
@@ -105,13 +86,42 @@ class MidtransController extends Controller
         $transaction->status = 'success';
         $transaction->paid_at = Carbon::now();
         
-        // Update status tagihan menjadi lunas
+        // Update SchoolFee menjadi lunas
         $schoolFee = $transaction->schoolFee;
-        $schoolFee->status = 'lunas';
-        $schoolFee->tanggal_lunas = Carbon::now();
-        $schoolFee->save();
+        if ($schoolFee) {
+            $schoolFee->status = 'lunas';
+            $schoolFee->tanggal_lunas = Carbon::now();
+            $schoolFee->save();
 
-        Log::info('SchoolFee marked as paid: ' . $schoolFee->id);
+            Log::info('SchoolFee updated to LUNAS: ' . $schoolFee->id);
+        }
+    }
+
+    private function setTransactionExpired(Transaction $transaction): void
+    {
+        $transaction->status = 'expired';
+        $transaction->expired_at = Carbon::now();
+        $transaction->save();
+
+        // Pastikan tagihan balik ke belum_lunas
+        if ($transaction->schoolFee) {
+            $transaction->schoolFee->status = 'belum_lunas'; // atau 'expired'
+            $transaction->schoolFee->save();
+            Log::info('SchoolFee reverted to BELUM_LUNAS (expired): '.$transaction->schoolFee->id);
+        }
+    }
+
+    private function setTransactionCanceled(Transaction $transaction): void
+    {
+        $transaction->status = 'canceled';
+        $transaction->canceled_at = Carbon::now();
+        $transaction->save();
+
+        if ($transaction->schoolFee) {
+            $transaction->schoolFee->status = 'belum_lunas';
+            $transaction->schoolFee->save();
+            Log::info('SchoolFee reverted to BELUM_LUNAS (canceled): '.$transaction->schoolFee->id);
+        }
     }
 
     public function finish(Request $request)

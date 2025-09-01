@@ -70,10 +70,6 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Webhook routes
-Route::post('/midtrans/notification', [MidtransController::class, 'notification']);
-Route::get('/midtrans/finish', [MidtransController::class, 'finish']);
-
 // Route untuk Siswa
 Route::middleware(['auth', 'siswa'])->prefix('siswa')->group(function() {
     Route::get('/', function () {
@@ -87,12 +83,15 @@ Route::middleware(['auth', 'siswa'])->prefix('siswa')->group(function() {
     // Routes pembayaran - perbaiki parameter
     Route::post('/tagihan/{tagihanId}/process', [TagihanController::class, 'process'])->name("checkout-process");
     Route::get('/checkout/{transaction}', [TagihanController::class, 'checkout'])->name("checkout");
-
-    // Payment callback routes
-    Route::get('/payment/finish', [MidtransController::class, 'finish'])->name('siswa.payment.finish');
-    Route::get('/payment/unfinish', [MidtransController::class, 'unfinish'])->name('siswa.payment.unfinish');
-    Route::get('/payment/error', [MidtransController::class, 'error'])->name('siswa.payment.error');
 });
+
+// Webhook routes
+Route::post('/midtrans/notification', [MidtransController::class, 'notification'])->name('midtrans.notification');
+
+// Tambahkan routes untuk Midtrans redirect
+Route::get('/midtrans/finish', [MidtransController::class, 'finish'])->name('midtrans.finish');
+Route::get('/midtrans/unfinish', [MidtransController::class, 'unfinish'])->name('midtrans.unfinish');
+Route::get('/midtrans/error', [MidtransController::class, 'error'])->name('midtrans.error');
 
 // Route untuk Admin
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
