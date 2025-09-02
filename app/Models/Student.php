@@ -50,11 +50,23 @@ class Student extends Model
         return $this->hasMany(SchoolFee::class, 'student_id', 'id');
     }
 
-    public function transaction() {
+    public function transactions() {
         return $this->hasMany(Transaction::class, 'student_id', 'id');
     }
 
     public function pendingTransactions() {
         return $this->transactions()->where('status', 'pending');
+    }
+
+    // Normalisasi nomor WA (hilangkan non-digit, leading 0 -> 62)
+    public function getWhatsappTargetAttribute(): ?string
+    {
+        $raw = $this->nomor_whatsapp_orang_tua_wali;
+        if (!$raw) return null;
+        $digits = preg_replace('/\D+/', '', $raw);
+        if (str_starts_with($digits, '0')) {
+            $digits = '62'.substr($digits, 1);
+        }
+        return $digits;
     }
 }

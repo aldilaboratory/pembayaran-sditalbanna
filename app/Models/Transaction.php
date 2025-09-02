@@ -9,8 +9,7 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    public $fillable = [
-        'id',
+    protected $fillable = [
         'student_id',
         'school_fee_id',
         'jumlah',
@@ -20,6 +19,13 @@ class Transaction extends Model
         'canceled_at',
         'expired_at',
         'snap_token',
+    ];
+
+    protected $casts = [
+        'jumlah'      => 'integer',
+        'paid_at'     => 'datetime',
+        'canceled_at' => 'datetime',
+        'expired_at'  => 'datetime',
     ];
 
     public function student() {

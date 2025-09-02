@@ -85,6 +85,7 @@ class MidtransController extends Controller
     {
         $transaction->status = 'success';
         $transaction->paid_at = Carbon::now();
+        $transaction->save();
         
         // Update SchoolFee menjadi lunas
         $schoolFee = $transaction->schoolFee;
@@ -95,6 +96,28 @@ class MidtransController extends Controller
 
             Log::info('SchoolFee updated to LUNAS: ' . $schoolFee->id);
         }
+
+        // === KIRIM WHATSAPP via Fonnte ===
+        $student = $transaction->student;
+        $target  = $student?->whatsapp_target; // accessor normalisasi
+
+        if ($target) {
+        // Susun pesan (sesuaikan field di database)
+        $namaSiswa = $student->nama ?? 'Siswa';
+        $tagihan   = $transaction->schoolFee?->jenis_tagihan ?? 'SPP';
+        $periode   = $transaction->schoolFee?->nama_bulan ?? null;
+        $nilai     = number_format($transaction->jumlah ?? 0, 0, ',', '.');
+
+        $barisPeriode = $periode ? "\nPeriode: {$periode}" : '';
+        $pesan = "Halo Orang Tua/Wali {$namaSiswa},\n"
+               . "Pembayaran *{$tagihan}* sebesar *Rp {$nilai}* telah *DITERIMA* ✅.\n"
+               . "Invoice: INV-{$transaction->id}\n"
+               . "Tanggal: ".now('Asia/Jakarta')->format('d M Y H:i').$barisPeriode."\n"
+               . "Terima kasih atas kerjasamanya.";
+
+        // Kirim (disarankan via Queue di produksi)
+        app(\App\Services\FonnteService::class)->send($target, $pesan, ['typing' => true]);
+    }
     }
 
     private function setTransactionExpired(Transaction $transaction): void
