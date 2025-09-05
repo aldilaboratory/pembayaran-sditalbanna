@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\profil_siswa\ProfilSiswaController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProfileController;
@@ -112,8 +113,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::delete('/data_siswa/{id}', [DataSiswaAdminController::class, 'destroy'])->name('admin.data_siswa.destroy');
     Route::post('/data_siswa', [DataSiswaAdminController::class, 'store'])->name('admin.data_siswa.store');
 
-    // Route::get('/admin/siswa/{id}/profil/edit', [ProfilController::class, 'edit'])->name('siswa.profil.edit');
-    // Route::put('/admin/siswa/{id}/profil', [ProfilController::class, 'update'])->name('siswa.profil.update');
+    Route::get('/profil_siswa/{student}/edit', [ProfilSiswaController::class, 'edit'])->name('admin.profil_siswa.edit');
+    Route::put('/profil_siswa/{student}', [ProfilSiswaController::class, 'update'])->name('admin.profil_siswa.update');
 
     // Route untuk Data Tagihan Siswa
     Route::get('/data_tagihan_siswa', [DataTagihanSiswaAdminController::class, 'index'])->name('admin.data_tagihan_siswa');

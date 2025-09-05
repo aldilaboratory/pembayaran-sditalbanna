@@ -38,7 +38,7 @@
                           @foreach ($students as $student)
                           <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
-                            <td>{{ $student->nama }}</td>
+                            <td><a href="{{ route('admin.profil_siswa.edit', $student) }}">{{ $student->nama }}</a></td>
                             <td class="text-center">{{ $student->nis }}</td>
                             <td>{{ $student->studentClass->class }}</td>
                             <td class="text-center">{{ $student->schoolYear->school_year }}</td>
