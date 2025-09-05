@@ -76,7 +76,10 @@ Route::middleware(['auth', 'siswa'])->prefix('siswa')->group(function() {
         return redirect()->route('siswa.dashboard');
     });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('siswa.dashboard');
-    Route::get('/profil', [ProfilController::class, 'index'])->name('siswa.profil.index');
+
+    Route::get('/profil/edit', [ProfilController::class, 'edit'])->name('siswa.profil.edit');
+    Route::put('/profil', [ProfilController::class, 'update'])->name('siswa.profil.update');
+
     Route::get('/tagihan', [TagihanController::class, 'index'])->name('siswa.tagihan.index');
     Route::get('/riwayat-pembayaran', [PembayaranController::class, 'index'])->name('siswa.pembayaran.index');
 
@@ -108,6 +111,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::put('/data_siswa/{id}', [DataSiswaAdminController::class, 'update'])->name('admin.data_siswa.update');
     Route::delete('/data_siswa/{id}', [DataSiswaAdminController::class, 'destroy'])->name('admin.data_siswa.destroy');
     Route::post('/data_siswa', [DataSiswaAdminController::class, 'store'])->name('admin.data_siswa.store');
+
+    // Route::get('/admin/siswa/{id}/profil/edit', [ProfilController::class, 'edit'])->name('siswa.profil.edit');
+    // Route::put('/admin/siswa/{id}/profil', [ProfilController::class, 'update'])->name('siswa.profil.update');
 
     // Route untuk Data Tagihan Siswa
     Route::get('/data_tagihan_siswa', [DataTagihanSiswaAdminController::class, 'index'])->name('admin.data_tagihan_siswa');

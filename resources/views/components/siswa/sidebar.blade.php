@@ -8,7 +8,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ route('siswa.profil.index') }}">
+              <a class="nav-link" href="{{ route('siswa.profil.edit') }}">
                 <i class="mdi mdi-account menu-icon"></i>
                 <span class="menu-title">Profil</span>
               </a>

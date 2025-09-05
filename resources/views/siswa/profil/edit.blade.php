@@ -7,14 +7,16 @@
                 <div class="card rounded">
                   <div class="card-body">
                     <h4 class="card-title">Profil Siswa</h4>
-                    <form class="form-sample">
+                    <form class="form-sample" action="{{ route('siswa.profil.update') }}" method="POST">
+                      @csrf
+                      @method('PUT')
                       <p class="card-description">Personal info</p>
                       <div class="row">
                         <div class="col-md-6">
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Nama</label>
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" value="Annisa Suryawati" />
+                              <input type="text" name="nama" class="form-control" value="{{ old('nama', $student->nama) }}" />
                             </div>
                           </div>
                         </div>
@@ -22,7 +24,7 @@
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label">NIK</label>
                             <div class="col-sm-9">
-                              <input type="number" class="form-control" value="02312010003" />
+                              <input type="number" name="nik" class="form-control" value="{{ old('nik', $student->nik) }}" />
                             </div>
                           </div>
                         </div>
@@ -32,7 +34,7 @@
                               >Tempat Lahir</label
                             >
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" value="Karangasem" />
+                              <input type="text" name="tempat_lahir" class="form-control" value="{{ old('tempat_lahir', $student->tempat_lahir) }}" />
                             </div>
                           </div>
                         </div>
@@ -42,9 +44,10 @@
                               >Jenis Kelamin</label
                             >
                             <div class="col-sm-9">
-                              <select class="js-example-basic-single form-select text-black">
-                                <option>Laki-laki</option>
-                                <option selected>Perempuan</option>
+                              <select class="js-example-basic-single form-select text-black" name="jenis_kelamin">
+                                <option disabled selected>Pilih Jenis Kelamin</option>
+                                <option value="L" @selected($student->jenis_kelamin === 'L')>Laki-laki</option>
+                                <option value="P" @selected($student->jenis_kelamin === 'P')>Perempuan</option>
                               </select>
                             </div>
                           </div>
@@ -59,7 +62,8 @@
                                 class="form-control"
                                 placeholder="dd/mm/yyyy"
                                 type="date"
-                                value="2002-12-25"
+                                name="tanggal_lahir"
+                                value="{{ old('tanggal_lahir', $student->tanggal_lahir) }}"
                               />
                             </div>
                           </div>
@@ -68,10 +72,14 @@
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Agama</label>
                             <div class="col-sm-9">
-                              <select class="js-example-basic-single form-select text-black">
-                                <option>Islam</option>
-                                <option>Hindu</option>
-                                <option>Kristen</option>
+                              <select class="js-example-basic-single form-select text-black" name="agama">
+                                <option disabled selected>Pilih Agama</option>
+                                <option value="islam" @selected($student->agama === 'islam')>Islam</option>
+                                <option value="hindu" @selected($student->agama === 'hindu')>Hindu</option>
+                                <option value="kristen" @selected($student->agama === 'kristen')>Kristen</option>
+                                <option value="katolik" @selected($student->agama === 'katolik')>Katolik</option>
+                                <option value="buddha" @selected($student->agama === 'buddha')>Buddha</option>
+                                <option value="konghucu" @selected($student->agama === 'konghucu')>Konghucu</option>
                               </select>
                             </div>
                           </div>
@@ -82,7 +90,7 @@
                               >NIS</label
                             >
                             <div class="col-sm-9">
-                              <input type="number" class="form-control" value="2021090310136" />
+                              <input type="number" name="nis" class="form-control" value="{{ old('nis', $student->nis) }}" />
                             </div>
                           </div>
                         </div>
@@ -92,7 +100,7 @@
                               >Alamat</label
                             >
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" value="Jl Gunung Kalimutu" />
+                              <input type="text" name="alamat" class="form-control" value="{{ old('alamat', $student->alamat) }}" />
                             </div>
                           </div>
                         </div>
@@ -100,10 +108,11 @@
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Jenis Tinggal</label>
                             <div class="col-sm-9">
-                              <select class="js-example-basic-single form-select text-black">
-                                <option>Dengan Orang Tua</option>
-                                <option>Dengan Wali</option>
-                                <option>Sendiri</option>
+                              <select class="js-example-basic-single form-select text-black" name="tinggal_dengan">
+                                <option disabled selected>Pilih Jenis Tinggal</option>
+                                <option value="dengan orang tua" @selected($student->tinggal_dengan === 'dengan orang tua')>Dengan Orang Tua</option>
+                                <option value="dengan wali" @selected($student->tinggal_dengan === 'dengan wali')>Dengan Wali</option>
+                                <optio nvalue="sendiri" @selected($student->tinggal_dengan === 'sendiri')>Sendiri</option>
                               </select>
                             </div>
                           </div>
@@ -114,9 +123,10 @@
                               >Kewarganegaraan</label
                             >
                             <div class="col-sm-9">
-                              <select class="js-example-basic-single form-select text-black">
-                                <option>WNI</option>
-                                <option>WNA</option>
+                              <select class="js-example-basic-single form-select text-black" name="kewarganegaraan">
+                                <option disabled selected>Pilih Kewarganegaraan</option>
+                                <option value="wni" @selected($student->kewarganegaraan === 'wni')>WNI</option>
+                                <option value="wna" @selected($student->kewarganegaraan === 'wna')>WNA</option>
                               </select>
                             </div>
                           </div>
@@ -124,55 +134,41 @@
                         <div class="col-md-6">
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label"
-                              >Nama Ibu</label
+                              >Nama Ibu Kandung</label
                             >
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" value="Umi Zumroh" />
+                              <input type="text" name="nama_ibu_kandung" class="form-control" value="{{ old('nama_ibu_kandung', $student->nama_ibu_kandung) }}" />
                             </div>
                           </div>
                         </div>
                         <div class="col-md-6">
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label"
-                              >Nama Pemilik Rekening</label
+                              >Nama Ayah Kandung</label
                             >
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" value="Annisa Suryawati">
+                              <input type="text" name="nama_ayah_kandung" class="form-control" value="{{ old('nama_ayah_kandung', $student->nama_ayah_kandung) }}" />
                             </div>
                           </div>
                         </div>
-                        
                         <div class="col-md-6">
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label"
-                              >Nama Ayah</label
+                              >Nama Wali</label
                             >
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" value="Andi Prayugo" />
+                              <input type="text" name="nama_wali" class="form-control" value="{{ old('nama_wali', $student->nama_wali) }}" />
                             </div>
                           </div>
                         </div>
-                        <div class="col-md-6">
-                          <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Nama Bank</label>
-                            <div class="col-sm-9">
-                              <select class="js-example-basic-multiple form-select text-black">
-                                <option>BCA</option>
-                                <option>BRI</option>
-                                <option>MANDIRI</option>
-                                <option selected>BSI</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-6"></div>
                         <div class="col-md-6">
                           <div class="form-group row">
                             <label class="col-sm-3 col-form-label"
-                              >No. Rekening</label
+                              >Nomor Whatsapp Orang Tua/Wali</label
                             >
                             <div class="col-sm-9">
-                              <input type="number" class="form-control" value="4109556" />
+                              <input type="text" name="nomor_whatsapp_orang_tua_wali" class="form-control" value="{{ old('nomor_whatsapp_orang_tua_wali', $student->nomor_whatsapp_orang_tua_wali) }}" />
+                              <small class="text-muted">Contoh pengetikkan nomor telpon: 082362846322</small>
                             </div>
                           </div>
                         </div>
