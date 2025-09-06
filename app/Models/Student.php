@@ -28,6 +28,7 @@ class Student extends Model
         'nama_ayah_kandung',
         'nama_wali',
         'nomor_whatsapp_orang_tua_wali',
+        'status',
     ];
 
     public function user() {

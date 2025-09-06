@@ -66,6 +66,7 @@ class DataSiswaAdminController extends Controller
                 'class_id' => $classId,
                 'school_year_id' => $schoolYearId,
                 'academic_year_id' => $academicYearId,
+                'status' => 'aktif',
             ]);
 
             DB::commit();
