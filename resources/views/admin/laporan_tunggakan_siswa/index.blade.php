@@ -89,14 +89,16 @@
                             <td colspan="{{ 3 + count($months) + 4 }}" class="text-center text-muted">Tidak ada data.</td>
                           </tr>
                           @endforelse
-                          <tr>
-                            <td colspan="18" class="text-end fw-bold">
-                              Total Tunggakan
-                            </td>
-                            <td class="text-end fw-bold">
-                              {{ $fmt($grandTotal) }}
-                            </td>
-                          </tr>
+                          @if (!empty($rows))
+                            <tr>
+                              <td colspan="18" class="text-end fw-bold">
+                                Total Tunggakan
+                              </td>
+                              <td class="text-end fw-bold">
+                                {{ $fmt($grandTotal) }}
+                              </td>
+                            </tr>
+                          @endif
                         </tbody>
                       </table>
                     </div>

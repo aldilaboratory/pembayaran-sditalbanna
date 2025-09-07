@@ -9,19 +9,26 @@
                   <div class="card-body">
                     <h4 class="card-title">Laporan Penerimaan Siswa</h4>
                     <div class="d-flex gap-3">
-                      <div class="d-flex flex-column">
-                        <p class="mb-1">Tahun Ajaran:</p>
-                        <select class="form-select text-reset">
-                          <option disabled selected>Tahun Ajaran</option>
-                          <option>2018/2019</option>
-                          <option>2019/2020</option>
-                          <option>2020/2021</option>
-                          <option selected>2021/2022</option>
-                        </select>
-                      </div>
+                      {{-- Filter Tahun Ajaran --}}
+                      <form method="GET" action="{{ route('admin.laporan_penerimaan') }}" class="d-flex gap-3">
+                        <div class="d-flex flex-column">
+                          <p class="mb-1">Tahun Ajaran:</p>
+                          <select name="academic_year_id" class="form-select text-reset" onchange="this.form.submit()">
+                            <option disabled selected>Tahun Ajaran</option>
+                            @foreach ($academicYears as $ay)
+                              <option value="{{ $ay->id }}" @selected($ay->id == $academicYearId)>{{ $ay->academic_year }}</option>
+                            @endforeach
+                          </select>
+                        </div>
+                      </form>
                     </div>
+
+                    @php
+                      $fmt = fn($v) => 'Rp'.number_format((int)$v, 0, ',', '.');
+                    @endphp
+
                     <div class="table-responsive mt-3">
-                      <table class="table table-bordered" id="dataTable">
+                      <table class="table table-bordered">
                         <thead class="text-center">
                           <tr>
                             <th class="text-center">
@@ -66,519 +73,57 @@
                           </tr>
                         </thead>
                         <tbody>
+                          @forelse ($rows as $r)
                           <tr>
                             <td class="text-center">
-                              1
+                              {{ $loop->iteration }}
                             </td>
                             <td>
-                              Juli
+                              {{ $r['bulan'] }}
                             </td>
                             <td class="text-end">
-                              2021
+                              {{ $r['tahun'] }}
                             </td>
                             <td class="text-end">
-                              56.000.000
+                              {{ $fmt($r['spp1']) }}
                             </td>
                             <td class="text-end">
-                              34.000.000
+                              {{ $fmt($r['spp2']) }}
                             </td>
                             <td class="text-end">
-                              129.000.000
+                              {{ $fmt($r['spp3']) }}
                             </td>
                             <td class="text-end">
-                              114.000.000
+                              {{ $fmt($r['spp4']) }}
                             </td>
                             <td class="text-end">
-                              92.000.000
+                              {{ $fmt($r['spp5']) }}
                             </td>
                             <td class="text-end">
-                              85.000.000
+                              {{ $fmt($r['spp6']) }}
                             </td>
                             <td class="text-end">
-                              26.000.000
+                              {{ $fmt($r['du']) }}
                             </td>
                             <td class="text-end">
-                              346.000.000
+                              {{ $fmt($r['bp']) }}
                             </td>
                             <td class="text-end">
-                              131.000.000
+                              {{ $fmt($r['bo']) }}
                             </td>
                             <td class="text-end">
-                              635.000.000
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              2
-                            </td>
-                            <td>
-                              Agustus
-                            </td>
-                            <td class="text-end">
-                              2021
-                            </td>
-                            <td class="text-end">
-                              56.000.000
-                            </td>
-                            <td class="text-end">
-                              34.000.000
-                            </td>
-                            <td class="text-end">
-                              129.000.000
-                            </td>
-                            <td class="text-end">
-                              114.000.000
-                            </td>
-                            <td class="text-end">
-                              92.000.000
-                            </td>
-                            <td class="text-end">
-                              85.000.000
-                            </td>
-                            <td class="text-end">
-                              26.000.000
-                            </td>
-                            <td class="text-end">
-                              346.000.000
-                            </td>
-                            <td class="text-end">
-                              131.000.000
-                            </td>
-                            <td class="text-end">
-                              635.000.000
+                              {{ $fmt($r['total']) }}
                             </td>
                           </tr>
-                          <tr>
-                            <td class="text-center">
-                              3
-                            </td>
-                            <td>
-                              September
-                            </td>
-                            <td class="text-end">
-                              2021
-                            </td>
-                            <td class="text-end">
-                              56.000.000
-                            </td>
-                            <td class="text-end">
-                              34.000.000
-                            </td>
-                            <td class="text-end">
-                              129.000.000
-                            </td>
-                            <td class="text-end">
-                              114.000.000
-                            </td>
-                            <td class="text-end">
-                              92.000.000
-                            </td>
-                            <td class="text-end">
-                              85.000.000
-                            </td>
-                            <td class="text-end">
-                              26.000.000
-                            </td>
-                            <td class="text-end">
-                              346.000.000
-                            </td>
-                            <td class="text-end">
-                              131.000.000
-                            </td>
-                            <td class="text-end">
-                              635.000.000
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              4
-                            </td>
-                            <td>
-                              Oktober
-                            </td>
-                            <td class="text-end">
-                              2021
-                            </td>
-                            <td class="text-end">
-                              56.000.000
-                            </td>
-                            <td class="text-end">
-                              34.000.000
-                            </td>
-                            <td class="text-end">
-                              129.000.000
-                            </td>
-                            <td class="text-end">
-                              114.000.000
-                            </td>
-                            <td class="text-end">
-                              92.000.000
-                            </td>
-                            <td class="text-end">
-                              85.000.000
-                            </td>
-                            <td class="text-end">
-                              26.000.000
-                            </td>
-                            <td class="text-end">
-                              346.000.000
-                            </td>
-                            <td class="text-end">
-                              131.000.000
-                            </td>
-                            <td class="text-end">
-                              635.000.000
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              5
-                            </td>
-                            <td>
-                              November
-                            </td>
-                            <td class="text-end">
-                              2021
-                            </td>
-                            <td class="text-end">
-                              56.000.000
-                            </td>
-                            <td class="text-end">
-                              34.000.000
-                            </td>
-                            <td class="text-end">
-                              129.000.000
-                            </td>
-                            <td class="text-end">
-                              114.000.000
-                            </td>
-                            <td class="text-end">
-                              92.000.000
-                            </td>
-                            <td class="text-end">
-                              85.000.000
-                            </td>
-                            <td class="text-end">
-                              26.000.000
-                            </td>
-                            <td class="text-end">
-                              346.000.000
-                            </td>
-                            <td class="text-end">
-                              131.000.000
-                            </td>
-                            <td class="text-end">
-                              635.000.000
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              6
-                            </td>
-                            <td>
-                              Desember
-                            </td>
-                            <td class="text-end">
-                              2021
-                            </td>
-                            <td class="text-end">
-                              56.000.000
-                            </td>
-                            <td class="text-end">
-                              34.000.000
-                            </td>
-                            <td class="text-end">
-                              129.000.000
-                            </td>
-                            <td class="text-end">
-                              114.000.000
-                            </td>
-                            <td class="text-end">
-                              92.000.000
-                            </td>
-                            <td class="text-end">
-                              85.000.000
-                            </td>
-                            <td class="text-end">
-                              26.000.000
-                            </td>
-                            <td class="text-end">
-                              346.000.000
-                            </td>
-                            <td class="text-end">
-                              131.000.000
-                            </td>
-                            <td class="text-end">
-                              635.000.000
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              7
-                            </td>
-                            <td>
-                              Januari
-                            </td>
-                            <td class="text-end">
-                              2022
-                            </td>
-                            <td class="text-end">
-                              56.000.000
-                            </td>
-                            <td class="text-end">
-                              34.000.000
-                            </td>
-                            <td class="text-end">
-                              129.000.000
-                            </td>
-                            <td class="text-end">
-                              114.000.000
-                            </td>
-                            <td class="text-end">
-                              92.000.000
-                            </td>
-                            <td class="text-end">
-                              85.000.000
-                            </td>
-                            <td class="text-end">
-                              26.000.000
-                            </td>
-                            <td class="text-end">
-                              346.000.000
-                            </td>
-                            <td class="text-end">
-                              131.000.000
-                            </td>
-                            <td class="text-end">
-                              635.000.000
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              8
-                            </td>
-                            <td>
-                              Februari
-                            </td>
-                            <td class="text-end">
-                              2022
-                            </td>
-                            <td class="text-end">
-                              56.000.000
-                            </td>
-                            <td class="text-end">
-                              34.000.000
-                            </td>
-                            <td class="text-end">
-                              129.000.000
-                            </td>
-                            <td class="text-end">
-                              114.000.000
-                            </td>
-                            <td class="text-end">
-                              92.000.000
-                            </td>
-                            <td class="text-end">
-                              85.000.000
-                            </td>
-                            <td class="text-end">
-                              26.000.000
-                            </td>
-                            <td class="text-end">
-                              346.000.000
-                            </td>
-                            <td class="text-end">
-                              131.000.000
-                            </td>
-                            <td class="text-end">
-                              635.000.000
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              9
-                            </td>
-                            <td>
-                              Maret
-                            </td>
-                            <td class="text-end">
-                              2022
-                            </td>
-                            <td class="text-end">
-                              56.000.000
-                            </td>
-                            <td class="text-end">
-                              34.000.000
-                            </td>
-                            <td class="text-end">
-                              129.000.000
-                            </td>
-                            <td class="text-end">
-                              114.000.000
-                            </td>
-                            <td class="text-end">
-                              92.000.000
-                            </td>
-                            <td class="text-end">
-                              85.000.000
-                            </td>
-                            <td class="text-end">
-                              26.000.000
-                            </td>
-                            <td class="text-end">
-                              346.000.000
-                            </td>
-                            <td class="text-end">
-                              131.000.000
-                            </td>
-                            <td class="text-end">
-                              635.000.000
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              10
-                            </td>
-                            <td>
-                              April
-                            </td>
-                            <td class="text-end">
-                              2022
-                            </td>
-                            <td class="text-end">
-                              56.000.000
-                            </td>
-                            <td class="text-end">
-                              34.000.000
-                            </td>
-                            <td class="text-end">
-                              129.000.000
-                            </td>
-                            <td class="text-end">
-                              114.000.000
-                            </td>
-                            <td class="text-end">
-                              92.000.000
-                            </td>
-                            <td class="text-end">
-                              85.000.000
-                            </td>
-                            <td class="text-end">
-                              26.000.000
-                            </td>
-                            <td class="text-end">
-                              346.000.000
-                            </td>
-                            <td class="text-end">
-                              131.000.000
-                            </td>
-                            <td class="text-end">
-                              635.000.000
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              11
-                            </td>
-                            <td>
-                              Mei
-                            </td>
-                            <td class="text-end">
-                              2022
-                            </td>
-                            <td class="text-end">
-                              56.000.000
-                            </td>
-                            <td class="text-end">
-                              34.000.000
-                            </td>
-                            <td class="text-end">
-                              129.000.000
-                            </td>
-                            <td class="text-end">
-                              114.000.000
-                            </td>
-                            <td class="text-end">
-                              92.000.000
-                            </td>
-                            <td class="text-end">
-                              85.000.000
-                            </td>
-                            <td class="text-end">
-                              26.000.000
-                            </td>
-                            <td class="text-end">
-                              346.000.000
-                            </td>
-                            <td class="text-end">
-                              131.000.000
-                            </td>
-                            <td class="text-end">
-                              635.000.000
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              12
-                            </td>
-                            <td>
-                              Juni
-                            </td>
-                            <td class="text-end">
-                              2022
-                            </td>
-                            <td class="text-end">
-                              56.000.000
-                            </td>
-                            <td class="text-end">
-                              34.000.000
-                            </td>
-                            <td class="text-end">
-                              129.000.000
-                            </td>
-                            <td class="text-end">
-                              114.000.000
-                            </td>
-                            <td class="text-end">
-                              92.000.000
-                            </td>
-                            <td class="text-end">
-                              85.000.000
-                            </td>
-                            <td class="text-end">
-                              26.000.000
-                            </td>
-                            <td class="text-end">
-                              346.000.000
-                            </td>
-                            <td class="text-end">
-                              131.000.000
-                            </td>
-                            <td class="text-end">
-                              635.000.000
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="text-center">
-                              13
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="text-end fw-bold">
-                              Total Penerimaan
-                            </td>
-                            <td class="text-end fw-bold">
-                              Rp8.625.000.000
-                            </td>
-                          </tr>
+                          @empty
+                            <tr><td colspan="13" class="text-center text-muted">Tidak ada data</td></tr>
+                          @endforelse
+                          @if (!empty($rows))
+                            <tr>
+                              <td colspan="12" class="text-end fw-bold">Total Penerimaan</td>
+                              <td class="text-end fw-bold">{{ $fmt($grandTotal) }}</td>
+                            </tr>
+                          @endif
                         </tbody>
                       </table>
                     </div>
