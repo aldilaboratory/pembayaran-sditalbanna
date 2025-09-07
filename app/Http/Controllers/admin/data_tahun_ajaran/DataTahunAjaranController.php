@@ -43,6 +43,14 @@ class DataTahunAjaranController extends Controller
 
     public function destroy($id) {
         $academicYears = academicYear::findOrFail($id);
+        // PRE-CHECK: apakah masih dipakai siswa?
+        $countStudentUsed = $academicYears->student()->count();
+        $countSchoolFeeUsed = $academicYears->schoolFee()->count();
+        if ($countStudentUsed > 0 || $countSchoolFeeUsed > 0) {
+            return redirect()
+                ->route('admin.data_tahun_ajaran')
+                ->with('error', "Tahun ajaran $academicYears->academic_year tidak bisa dihapus: masih dipakai oleh {$countStudentUsed} siswa dan {$countSchoolFeeUsed} tagihan.");
+        }
         $academicYears->delete();
 
         return redirect()->route('admin.data_tahun_ajaran')

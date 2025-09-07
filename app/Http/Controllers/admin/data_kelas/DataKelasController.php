@@ -52,6 +52,13 @@ class DataKelasController extends Controller
 
     public function destroy($id) {
         $classes = StudentClass::findOrFail($id);
+        // PRE-CHECK: apakah masih dipakai siswa?
+        $count = $classes->student()->count();
+        if ($count > 0) {
+            return redirect()
+                ->route('admin.data_angkatan')
+                ->with('error', "Tahun angkatan $classes->class tidak bisa dihapus: masih dipakai oleh {$count} siswa.");
+        }
         $classes->delete();
 
         return redirect()->route('admin.data_kelas')
