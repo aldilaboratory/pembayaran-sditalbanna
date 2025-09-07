@@ -7,6 +7,7 @@ use App\Http\Requests\StoreSchoolYearsRequest;
 use App\Http\Requests\UpdateSchoolYearsRequest;
 use App\Models\SchoolYear;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class DataAngkatanController extends Controller
 {
@@ -43,6 +44,13 @@ class DataAngkatanController extends Controller
 
     public function destroy($id) {
         $schoolYears = SchoolYear::findOrFail($id);
+        // PRE-CHECK: apakah masih dipakai siswa?
+        $count = $schoolYears->student()->count();
+        if ($count > 0) {
+            return redirect()
+                ->route('admin.data_angkatan')
+                ->with('error', "Tahun angkatan $schoolYears->school_year tidak bisa dihapus: masih dipakai oleh {$count} siswa.");
+        }
         $schoolYears->delete();
 
         return redirect()->route('admin.data_angkatan')

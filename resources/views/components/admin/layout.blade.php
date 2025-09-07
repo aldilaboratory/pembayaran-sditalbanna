@@ -22,6 +22,7 @@
   </head>
   <body>
     <div class="container-scroller">
+      @include('sweetalert::alert')
       <!-- partial:partials/_navbar.html -->
       @include('components.admin.header')
       <!-- partial -->  
@@ -63,29 +64,59 @@
     <script>
       new DataTable('#dataTable');
     </script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-      document.querySelectorAll('.delete-btn').forEach(button => {
-          button.addEventListener('click', function() {
-              const id = this.getAttribute('data-id');
-              const name = this.getAttribute('data-name');
-              
-              Swal.fire({
-                  title: 'Apakah Anda yakin?',
-                  text: `Data kelas "${name}" akan dihapus!`,
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#d33',
-                  cancelButtonColor: '#3085d6',
-                  confirmButtonText: 'Ya, hapus!',
-                  cancelButtonText: 'Batal'
-              }).then((result) => {
-                  if (result.isConfirmed) {
-                      document.getElementById('delete-form-' + id).submit();
-                  }
-              });
-          });
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    text: '{{ session('success') }}',
+                    timer: 5000,
+                    timerProgressBar: false,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top',
+                    background: '#E6FFE6',
+                });
+            @endif
+            
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    text: '{{ session('error') }}',
+                    timer: 5000,
+                    timerProgressBar: false,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top',
+                    background: '#ffefea',
+                });
+            @endif
+        });
+        </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.delete-btn').forEach(button => {
+    button.addEventListener('click', function (e) {
+      e.preventDefault(); // aman karena type="button" (tidak submit)
+      const id = this.getAttribute('data-id');
+      const name = this.getAttribute('data-name');
+
+      Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: `Data "${name}" akan dihapus!`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.getElementById('delete-form-' + id).submit();
+        }
       });
-    </script> --}}
+    });
+  });
+});
+    </script>
   </body>
 </html>
