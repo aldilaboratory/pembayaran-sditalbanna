@@ -72,7 +72,7 @@ class DataSiswaAdminController extends Controller
             DB::commit();
 
             return redirect()->route('admin.data_siswa')
-                             ->with('success', 'Data siswa berhasil ditambahkan')
+                             ->with('success', 'Data berhasil ditambahkan')
                              ->with('login_credentials', [
                                 'username' => $user->username,
                                 'password' => $this->generateDefaultPassword($request->nis),
@@ -122,7 +122,7 @@ class DataSiswaAdminController extends Controller
             $students->user->update([
                 'name' => $request->name,
                 'username' => $request->nis, // Username ikut berubah sesuai NIS baru
-                'password' => Hash::make($this->generateDefaultPassword($request->nis)), // Set password baru dengan format "siswa + 4 digit terakhir NIS" 
+                'password' => Hash::make($this->generateDefaultPassword($request->nis)), // Set password baru dengan format "siswa + 6 digit terakhir NIS" 
             ]);
 
             // Update data Siswa
@@ -137,7 +137,7 @@ class DataSiswaAdminController extends Controller
             DB::commit();
 
             return redirect()->route('admin.data_siswa')
-                             ->with('success', 'Data siswa berhasil diubah! Username telah diperbarui sesuai NIS terbaru.');
+                             ->with('success', 'Data siswa berhasil diubah! Username dan password telah diperbarui sesuai NIS terbaru.');
         } catch (\Exception $e) {
             DB::rollBack();
 

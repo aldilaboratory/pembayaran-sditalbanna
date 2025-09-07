@@ -45,10 +45,10 @@
                             <td class="text-center">{{ $student->academicYear->academic_year }}</td>
                             <td class="text-center">
                               <a href="{{ route('admin.data_siswa.edit', $student->id) }}" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <form action="{{ route('admin.data_siswa.destroy', $student->id) }}" method="POST" class="d-inline">
+                              <form id="delete-form-{{ $student->id }}" action="{{ route('admin.data_siswa.destroy', $student->id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data {{ $student->nama }}?')"><i class="mdi mdi-delete align-middle"></i> Hapus</button>
+                                <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $student->id }}" data-name="{{ $student->nama }}"><i class="mdi mdi-delete align-middle"></i> Hapus</button>
                               </form>
                             </td>
                           </tr>
