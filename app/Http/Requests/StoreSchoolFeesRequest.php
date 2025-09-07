@@ -23,6 +23,7 @@ class StoreSchoolFeesRequest extends FormRequest
     {
         return [
             'class_id' => 'required|exists:student_classes,id',
+            'tahun_ajaran' => 'required|exists:academic_years,id',
             'bulan' => 'required|integer|between:1,12',
             'jenis_tagihan' => 'required|string|in:spp,daftar_ulang,biaya_pengembangan,biaya_operasional',
             'jumlah' => 'required|numeric|min:0',

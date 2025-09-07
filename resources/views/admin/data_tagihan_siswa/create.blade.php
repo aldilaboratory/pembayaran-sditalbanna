@@ -39,11 +39,8 @@
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Tambah Data Tagihan Per Kelas</h4>
-                    <p>Tahun Ajaran: {{ $latestAcademicYear }}</p>
                     <form action="{{ route('admin.data_tagihan_siswa.store') }}" method="POST">
                       @csrf
-
-                      <input type="hidden" name="academic_year_id" value="{{ $latestAcademicYear }}">
 
                       <div class="form-group">
                           <label for="class_id">Kelas</label>
@@ -93,6 +90,18 @@
                             @endphp
                             @foreach ($months as $value => $label)
                               <option value="{{ $value }} {{ old('bulan') == $value ? 'selected' : ''  }}">{{ $label }}</option>
+                            @endforeach
+                          </select>
+                          @error('bulan')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                          @enderror
+                      </div>
+                      <div class="form-group">
+                          <label for="tahun_ajaran">Tagihan Untuk Tahun Ajaran</label>
+                          <select name="tahun_ajaran" id="tahun_ajaran" class="form-select text-black form-control">
+                            <option disabled selected>Pilih Tahun Ajaran</option>
+                            @foreach ($academicYears as $academicYear)
+                              <option value="{{ $academicYear->id }} {{ old('tahun_ajaran') == $academicYear->academic_year ? 'selected' : ''  }}">{{ $academicYear->academic_year }}</option>
                             @endforeach
                           </select>
                           @error('bulan')

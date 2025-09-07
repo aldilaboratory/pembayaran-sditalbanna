@@ -95,9 +95,9 @@ class DataTagihanSiswaAdminController extends Controller
 
     public function create() {
         $studentClasses = StudentClass::all()->sortBy('class');
-        $latestAcademicYear = AcademicYear::orderByRaw('CAST(LEFT(academic_year, 4) AS UNSIGNED) DESC')->value('academic_year');
+        $academicYears = AcademicYear::all()->sortBy('academic_year');
         
-        return view('admin.data_tagihan_siswa.create', compact('studentClasses', 'latestAcademicYear'));
+        return view('admin.data_tagihan_siswa.create', compact('studentClasses', 'academicYears'));
     }
 
     public function store(StoreSchoolFeesRequest $request) {
@@ -112,14 +112,12 @@ class DataTagihanSiswaAdminController extends Controller
             if ($students->isEmpty()) {
                 return back()->with('error', 'Tidak ada siswa aktif di kelas yang dipilih.');
             }
-
-            $latestAcademicYear = AcademicYear::orderByRaw('CAST(LEFT(academic_year, 4) AS UNSIGNED) DESC')->first();
             
             foreach ($students as $student) {
                 // Buat tagihan baru
                 SchoolFee::create([
                     'student_id' => $student->id,
-                    'academic_year_id' => $latestAcademicYear->id,
+                    'academic_year_id' => $request->tahun_ajaran,
                     'bulan' => $request->bulan,
                     'jenis_tagihan' => $request->jenis_tagihan,
                     'jumlah' => $request->jumlah,
