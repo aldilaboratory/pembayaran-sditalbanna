@@ -29,7 +29,7 @@ class DataKelasController extends Controller
         StudentClass::create($request->validated());
 
         return redirect()->route('admin.data_kelas')
-                         ->with('success', 'Data Kelas berhasil ditambahkan!');
+                         ->with('success', 'Data berhasil ditambahkan!');
     }
 
     public function edit($id) {

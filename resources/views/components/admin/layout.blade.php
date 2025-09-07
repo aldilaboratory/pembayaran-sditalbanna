@@ -95,28 +95,28 @@
         });
         </script>
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('.delete-btn').forEach(button => {
-    button.addEventListener('click', function (e) {
-      e.preventDefault(); // aman karena type="button" (tidak submit)
-      const id = this.getAttribute('data-id');
-      const name = this.getAttribute('data-name');
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.delete-btn').forEach(button => {
+          button.addEventListener('click', function (e) {
+            e.preventDefault(); // aman karena type="button" (tidak submit)
+            const id = this.getAttribute('data-id');
+            const name = this.getAttribute('data-name');
 
-      Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: `Data "${name}" akan dihapus!`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, hapus!',
-        cancelButtonText: 'Batal'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          document.getElementById('delete-form-' + id).submit();
-        }
+            Swal.fire({
+              title: 'Apakah Anda yakin?',
+              text: `Data "${name}" akan dihapus!`,
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Ya, hapus!',
+              cancelButtonText: 'Batal'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+              }
+            });
+          });
+        });
       });
-    });
-  });
-});
     </script>
   </body>
 </html>
