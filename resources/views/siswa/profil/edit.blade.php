@@ -90,7 +90,7 @@
                               >NIS</label
                             >
                             <div class="col-sm-9">
-                              <input type="number" name="nis" class="form-control" value="{{ old('nis', $student->nis) }}" />
+                              <input type="number" name="nis" class="form-control bg-light" value="{{ old('nis', $student->nis) }}" readonly />
                             </div>
                           </div>
                         </div>
@@ -112,7 +112,7 @@
                                 <option disabled selected>Pilih Jenis Tinggal</option>
                                 <option value="dengan orang tua" @selected($student->tinggal_dengan === 'dengan orang tua')>Dengan Orang Tua</option>
                                 <option value="dengan wali" @selected($student->tinggal_dengan === 'dengan wali')>Dengan Wali</option>
-                                <optio nvalue="sendiri" @selected($student->tinggal_dengan === 'sendiri')>Sendiri</option>
+                                <option value="sendiri" @selected($student->tinggal_dengan === 'sendiri')>Sendiri</option>
                               </select>
                             </div>
                           </div>
