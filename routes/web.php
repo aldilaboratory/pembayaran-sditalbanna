@@ -126,6 +126,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
 
     // Route untuk Laporan Tunggakan Siswa
     Route::get('/laporan_tunggakan_siswa', [LaporanTunggakanSiswaController::class, 'index'])->name('admin.laporan_tunggakan_siswa');
+    Route::get('/laporan-tunggakan-siswa/pdf',  [LaporanTunggakanSiswaController::class, 'pdf'])->name('admin.laporan_tunggakan_siswa.pdf');
     
     // Route untuk Laporan Penerimaan
     Route::get('/laporan_penerimaan', [LaporanPenerimaanController::class, 'index'])->name('admin.laporan_penerimaan');

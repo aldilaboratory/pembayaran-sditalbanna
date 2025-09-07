@@ -3,7 +3,7 @@
           <div class="content-wrapper">
             <div class="row">
               <div class="col-md-12">
-                <button class="btn btn-light border-primary"><i class="mdi mdi-download align-middle"></i> Download Laporan (pdf)</button>
+                <a class="btn btn-light border-primary" href="{{ route('admin.laporan_tunggakan_siswa.pdf', request()->query()) }}"><i class="mdi mdi-download align-middle"></i> Download Laporan (pdf)</a>
                 <button class="btn btn-light border-primary mx-3"><i class="mdi mdi-printer align-middle"></i> Cetak Laporan</button>
                 <div class="card rounded mt-3">
                   <div class="card-body">
