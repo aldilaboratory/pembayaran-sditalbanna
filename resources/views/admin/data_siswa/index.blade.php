@@ -30,6 +30,9 @@
                               Tahun Ajaran
                             </th>
                             <th class="text-center">
+                              Status
+                            </th>
+                            <th class="text-center">
                               Aksi
                             </th>
                           </tr>
@@ -43,6 +46,13 @@
                             <td>{{ $student->studentClass->class }}</td>
                             <td class="text-center">{{ $student->schoolYear->school_year }}</td>
                             <td class="text-center">{{ $student->academicYear->academic_year }}</td>
+                            <td class="text-center">
+                              @if ($student->status === 'aktif')
+                                <label class="badge badge-success">{{ $student->status }}</label>
+                              @else
+                                <label class="badge badge-danger">{{ $student->status }}</label>
+                              @endif
+                            </td>
                             <td class="text-center">
                               <a href="{{ route('admin.data_siswa.edit', $student->id) }}" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
                               <form id="delete-form-{{ $student->id }}" action="{{ route('admin.data_siswa.destroy', $student->id) }}" method="POST" class="d-inline">

@@ -132,12 +132,13 @@ class DataSiswaAdminController extends Controller
                 'class_id' => $classId,
                 'school_year_id' => $schoolYearId,
                 'academic_year_id' => $academicYearId,
+                'status' => $request->status,
             ]);
 
             DB::commit();
 
             return redirect()->route('admin.data_siswa')
-                             ->with('success', 'Data siswa berhasil diubah! Username dan password telah diperbarui sesuai NIS terbaru.');
+                             ->with('success', 'Data siswa berhasil diubah!');
         } catch (\Exception $e) {
             DB::rollBack();
 

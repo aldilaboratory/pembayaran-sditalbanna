@@ -57,6 +57,14 @@
                             @endforeach
                           </select>
                       </div>
+                      <div class="form-group">
+                          <label for="status">Status Siswa</label>
+                          <select name="status" id="status" class="form-select text-black" {{ old('status', $students->nama) }}>
+                            <option disabled selected>Pilih Status Siswa</option>
+                            <option value="aktif" @selected($students->status === 'aktif')>Aktif</option>
+                            <option value="nonaktif" @selected($students->status === 'nonaktif')>Nonaktif</option>
+                          </select>
+                      </div>
                       {{-- Info Alert --}}
                         <div class="alert alert-info">
                             <strong>Informasi:</strong>
