@@ -51,5 +51,11 @@
                 <span class="menu-title">Data Tahun Ajaran</span>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('admin.data_admin') }}">
+                <i class="mdi mdi-account-cog menu-icon"></i>
+                <span class="menu-title">Data Admin</span>
+              </a>
+            </li>
           </ul>
         </nav>

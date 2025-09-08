@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\data_admin\DataAdminController;
 use App\Http\Controllers\admin\profil_siswa\ProfilSiswaController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\MidtransController;
@@ -155,6 +156,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::put('/data_tahun_ajaran/{id}', [DataTahunAjaranController::class, 'update'])->name('admin.data_tahun_ajaran.update');
     Route::delete('/data_tahun_ajaran/{id}', [DataTahunAjaranController::class, 'destroy'])->name('admin.data_tahun_ajaran.destroy');
     Route::post('/data_tahun_ajaran', [DataTahunAjaranController::class, 'store'])->name('admin.data_tahun_ajaran.store');
+
+    // Route untuk Data Admin
+    Route::get('/data_admin', [DataAdminController::class, 'index'])->name('admin.data_admin');
+    Route::get('/data_admin/create', [DataAdminController::class, 'create'])->name('admin.data_admin.create');
+    Route::get('/data_admin/{id}/edit', [DataAdminController::class, 'edit'])->name('admin.data_admin.edit');
+    Route::put('/data_admin/{id}', [DataAdminController::class, 'update'])->name('admin.data_admin.update');
+    Route::delete('/data_admin/{id}', [DataAdminController::class, 'destroy'])->name('admin.data_admin.destroy');
+    Route::post('/data_admin', [DataAdminController::class, 'store'])->name('admin.data_admin.store');
 });
 
 require __DIR__.'/auth.php';
