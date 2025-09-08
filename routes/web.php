@@ -130,6 +130,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     
     // Route untuk Laporan Penerimaan
     Route::get('/laporan_penerimaan', [LaporanPenerimaanController::class, 'index'])->name('admin.laporan_penerimaan');
+    Route::get('laporan-penerimaan/pdf',  [LaporanPenerimaanController::class,'pdf'])->name('admin.laporan_penerimaan.pdf');
 
     // Route untuk Data Kelas
     Route::get('/data_kelas', [DataKelasController::class, 'index'])->name('admin.data_kelas');

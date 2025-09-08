@@ -3,11 +3,10 @@
           <div class="content-wrapper">
             <div class="row">
               <div class="col-md-12">
-                <button class="btn btn-light"><i class="mdi mdi-download align-middle"></i> Download Laporan (pdf)</button>
-                <button class="btn btn-light mx-3"><i class="mdi mdi-printer align-middle"></i> Cetak Laporan</button>
+                <a class="btn btn-light border-primary" href="{{ route('admin.laporan_penerimaan.pdf', request()->query()) }}"><i class="mdi mdi-download align-middle"></i> Download Laporan (pdf)</a>
                 <div class="card rounded mt-3">
                   <div class="card-body">
-                    <h4 class="card-title">Laporan Penerimaan Siswa</h4>
+                    <h4 class="card-title">Laporan Penerimaan Pembayaran Siswa</h4>
                     <div class="d-flex gap-3">
                       {{-- Filter Tahun Ajaran --}}
                       <form method="GET" action="{{ route('admin.laporan_penerimaan') }}" class="d-flex gap-3">

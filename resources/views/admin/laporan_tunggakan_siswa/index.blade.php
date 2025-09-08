@@ -4,7 +4,6 @@
             <div class="row">
               <div class="col-md-12">
                 <a class="btn btn-light border-primary" href="{{ route('admin.laporan_tunggakan_siswa.pdf', request()->query()) }}"><i class="mdi mdi-download align-middle"></i> Download Laporan (pdf)</a>
-                <button class="btn btn-light border-primary mx-3"><i class="mdi mdi-printer align-middle"></i> Cetak Laporan</button>
                 <div class="card rounded mt-3">
                   <div class="card-body">
                     <h4 class="card-title">Laporan Tunggakan Siswa</h4>
