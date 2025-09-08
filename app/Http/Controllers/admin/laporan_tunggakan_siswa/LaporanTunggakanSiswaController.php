@@ -33,13 +33,17 @@ class LaporanTunggakanSiswaController extends Controller
         $monthLabels = [7=>'Jul',8=>'Ags',9=>'Sep',10=>'Okt',11=>'Nov',12=>'Des',1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'Mei',6=>'Jun'];
 
         // Ambil siswa + fee utk tahun ajaran terpilih; filter kelas jika dipilih
-        $students = Student::with(['schoolFee' => function ($q) use ($academicYearId) {
-                $q->where('academic_year_id', $academicYearId)
-                  ->select('id','student_id','bulan','jenis_tagihan','jumlah','status');
-            }])
-            ->when($classId, fn($q) => $q->where('class_id', $classId))
-            ->orderBy('nama')
-            ->get();
+        $students = Student::query()
+        ->when($classId, fn($q) => $q->where('class_id', $classId))
+        ->whereHas('schoolFee', function ($q) use ($academicYearId) {
+            $q->where('academic_year_id', $academicYearId);
+        })
+        ->with(['schoolFee' => function ($q) use ($academicYearId) {
+            $q->where('academic_year_id', $academicYearId)
+            ->select('id','student_id','bulan','jenis_tagihan','jumlah','status');
+        }])
+        ->orderBy('nama')
+        ->get();
 
         // Susun data tabel
         $rows = [];

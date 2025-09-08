@@ -10,7 +10,7 @@
   @page { size: A4 landscape; margin: 6mm; }
   * { font-family: DejaVu Sans, Arial, sans-serif; }
   table { width: 100%; border-collapse: collapse; }
-  th, td { border: .6px solid #555; padding: 3px 4px; font-size: 10px; line-height: 1.2; }
+  th, td { border: .6px solid #555; padding: 2px 3px; font-size: 9px; line-height: 1.2; }
   th { background: #f3f3f3; }
   thead { display: table-header-group; } /* header ulang tiap halaman */
   .right { text-align: right; }
