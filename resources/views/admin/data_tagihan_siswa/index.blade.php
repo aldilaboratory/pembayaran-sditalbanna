@@ -188,13 +188,13 @@
                               Bulan
                             </th>
                             <th class="text-center">
+                              Tahun Ajaran
+                            </th>
+                            <th class="text-center">
                               Jenis Tagihan
                             </th>
                             <th class="text-center">
                               Jumlah
-                            </th>
-                            <th class="text-center">
-                              Sisa
                             </th>
                             <th class="text-center">
                               Jatuh Tempo
@@ -217,6 +217,9 @@
                                 <td>
                                   {{ $fee->nama_bulan }}
                                 </td>
+                                <th class="text-center text-light-emphasis">
+                                  {{ $fee->academicYear->academic_year }}
+                                </th>
                                 <td>
                                   @php
                                     $jenisTagihan = [
@@ -230,9 +233,6 @@
                                 </td>
                                 <td class="text-end">
                                   Rp{{ number_format($fee->jumlah, 0, ',', ',') }}
-                                </td>
-                                <td class="text-end">
-                                  Rp{{ number_format($fee->sisa, 0, ',', ',') }}
                                 </td>
                                 <td>
                                   {{ $fee->jatuh_tempo ? \Carbon\Carbon::parse($fee->jatuh_tempo)->format('d F Y') : '-' }}
