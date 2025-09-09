@@ -3,39 +3,6 @@
           <div class="content-wrapper">
             <div class="row">
               <div class="col-md-12">
-                {{-- Success Message --}}
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                {{-- Error Messages --}}
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <ul class="mb-0">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
-                {{-- Warning Messages --}}
-                @if(session('warnings'))
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>Peringatan:</strong>
-                        <ul class="mb-0 mt-2">
-                            @foreach(session('warnings') as $warning)
-                                <li>{{ $warning }}</li>
-                            @endforeach
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
-
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Tambah Data Tagihan Per Kelas</h4>

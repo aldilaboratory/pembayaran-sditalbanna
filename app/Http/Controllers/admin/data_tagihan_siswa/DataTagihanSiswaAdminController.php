@@ -106,6 +106,7 @@ class DataTagihanSiswaAdminController extends Controller
             
             // Ambil semua siswa di kelas yang dipilih
             $students = Student::where('class_id', $request->class_id)
+                              ->where('academic_year_id', $request->tahun_ajaran)
                               ->where('status', 'aktif') // Hanya siswa aktif
                               ->get();
             
@@ -115,7 +116,7 @@ class DataTagihanSiswaAdminController extends Controller
             
             foreach ($students as $student) {
                 // Buat tagihan baru
-                SchoolFee::create([
+                SchoolFee::firstOrCreate([
                     'student_id' => $student->id,
                     'academic_year_id' => $request->tahun_ajaran,
                     'bulan' => $request->bulan,

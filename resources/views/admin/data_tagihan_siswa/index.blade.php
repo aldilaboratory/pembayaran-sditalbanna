@@ -76,20 +76,6 @@
 
 <div class="main-panel">
           <div class="content-wrapper">
-            {{-- Alert Messages --}}
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
             <div class="row">
               <div class="col-md-12">
                 <a href="{{ route('admin.data_tagihan_siswa.create') }}" class="btn btn-primary mb-3">+ Input Tagihan Siswa Sekaligus</a>
@@ -205,6 +191,9 @@
                             <th class="text-center">
                               Status
                             </th>
+                            <th class="text-center">
+                              Aksi
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -247,6 +236,13 @@
                                       <label class="badge badge-warning">Cicilan</label>
                                   @else
                                       <label class="badge badge-danger">Belum Lunas</label>
+                                  @endif
+                                </td>
+                                <td class="text-center">
+                                  @if($fee->status == 'lunas')
+                                      <p>-</p>
+                                  @else
+                                      <a class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
                                   @endif
                                 </td>
                               </tr>

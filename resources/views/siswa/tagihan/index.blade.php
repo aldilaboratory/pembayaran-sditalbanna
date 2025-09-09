@@ -18,6 +18,9 @@
                               Bulan
                             </th>
                             <th class="text-center">
+                              Tahun Ajaran
+                            </th>
+                            <th class="text-center">
                               Jenis Tagihan
                             </th>
                             <th class="text-center">
@@ -45,6 +48,9 @@
                             </td>
                             <td>
                               {{ $tagihan->nama_bulan }}
+                            </td>
+                            <td class="text-center">
+                              {{ $tagihan->academicYear->academic_year }}
                             </td>
                             <td>
                               {{ $tagihan->jenis_tagihan_label }}
