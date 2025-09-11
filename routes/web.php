@@ -5,6 +5,7 @@ use App\Http\Controllers\admin\profil_siswa\ProfilSiswaController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 // Route untuk Siswa
 use App\Http\Controllers\Siswa\DashboardController;
@@ -88,6 +89,14 @@ Route::middleware(['auth', 'siswa'])->prefix('siswa')->group(function() {
     // Routes pembayaran - perbaiki parameter
     Route::post('/tagihan/{tagihanId}/process', [TagihanController::class, 'process'])->name("checkout-process");
     Route::get('/checkout/{transaction}', [TagihanController::class, 'checkout'])->name("checkout");
+
+    // Download PDF invoice
+    Route::get('/transaksi/{transaction}/pdf', [TransactionController::class, 'pdf'])
+        ->name('siswa.transaksi.pdf');
+
+    // Detail transaksi (HTML)
+    Route::get('/transaksi/{transaction}', [TransactionController::class, 'show'])
+        ->name('siswa.transaksi.show');
 });
 
 // Webhook routes

@@ -50,7 +50,7 @@ class TagihanController extends Controller
                                         ->first();
 
         if ($activeTransaction) {
-            return redirect()->route('siswa.checkout', $activeTransaction->id);
+            return redirect()->route('checkout', $activeTransaction->id);
         }
 
         // Jika tidak ada transaksi pending, atau yang ada sudah expired/failed
@@ -69,11 +69,13 @@ class TagihanController extends Controller
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
+        $orderId = $transaction->invoice_code; // -> "INV-202409-000123"
+
         // 3. Parameter untuk Midtrans
         $params = [
             'transaction_details' => [
-                'order_id' => 'INV-' . $transaction->id . '-' . time(),
-                'gross_amount' => (int)$schoolFee->jumlah,
+                'order_id'     => $orderId,
+                'gross_amount' => (int) $transaction->jumlah,
             ],
             'customer_details' => [
                 'name' => $student->nama,
@@ -91,7 +93,7 @@ class TagihanController extends Controller
             'expiry' => array(
                 'start_time' => date('Y-m-d H:i:s O'),
                 'unit' => 'minute', 
-                'duration' => 1
+                'duration' => 60
             ),
             'callbacks' => [
                 'finish' => route('midtrans.finish'),

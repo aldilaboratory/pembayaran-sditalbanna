@@ -27,18 +27,21 @@ class MidtransController extends Controller
                 'fraud_status' => $notification->fraud_status ?? 'N/A'
             ]);
 
-            // Parse order_id (INV-{transaction_id}-{timestamp})
-            $orderParts = explode('-', $notification->order_id);
-            if (count($orderParts) < 2 || $orderParts[0] !== 'INV') {
-                Log::error('Invalid order ID format: ' . $notification->order_id);
-                return response()->json(['status' => 'error', 'message' => 'Invalid order ID']);
+            $orderId = $notification->order_id;
+            $transaction = null;
+
+            // Format BARU: INV-YYYYMM-000123  -> ambil 6 digit terakhir sebagai ID
+            if (preg_match('/^INV-\d{6}-(\d{6})$/', $orderId, $m)) {
+                $transaction = Transaction::find((int) ltrim($m[1], '0'));
             }
 
-            $transactionId = $orderParts[1];
-            $transaction = Transaction::find($transactionId);
+            // Fallback format LAMA: INV-{id}-{timestamp}
+            if (!$transaction && preg_match('/^INV-(\d+)-\d+$/', $orderId, $m)) {
+                $transaction = Transaction::find((int) $m[1]);
+            }
 
             if (!$transaction) {
-                Log::error('Transaction not found: ' . $transactionId);
+                \Log::error('Transaction not found for order_id: '.$orderId);
                 return response()->json(['status' => 'error', 'message' => 'Transaction not found']);
             }
 
@@ -111,7 +114,7 @@ class MidtransController extends Controller
         $barisPeriode = $periode ? "\nPeriode: {$periode}" : '';
         $pesan = "Halo Orang Tua/Wali {$namaSiswa},\n"
                . "Pembayaran *{$tagihan}* sebesar *Rp {$nilai}* telah *DITERIMA* ✅.\n"
-               . "Invoice: INV-{$transaction->id}\n"
+               . "Invoice: {$transaction->invoice_code}\n"
                . "Tanggal: ".now('Asia/Jakarta')->format('d M Y H:i').$barisPeriode."\n"
                . "Terima kasih atas kerjasamanya.";
 
