@@ -83,7 +83,7 @@
                                 @if ($successTx)
                                   <a href="{{ route('siswa.transaksi.show', $successTx->id) }}"
                                     class="btn btn-light text-center btn-sm">
-                                    <i class="mdi mdi-history align-middle"></i> Lihat Detail Transaksi
+                                    <i class="mdi mdi-history align-middle"></i> Detail Transaksi
                                   </a>
                                 @else
                                   <span class="text-muted">-</span>

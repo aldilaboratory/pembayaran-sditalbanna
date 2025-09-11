@@ -33,36 +33,42 @@
                         </thead>
                         <tbody>
                           @foreach ($transactions as $transaction)
-                          <tr>
-                            <td class="text-center">
-                              {{ $loop->iteration }}
-                            </td>
-                            <td>
-                              {{ $transaction->paid_at }}
-                            </td>
-                            <td>
-                              {{ $transaction->snap_token }}
-                            </td>
-                            <td class="text-end">
-                              Rp{{ number_format($transaction->jumlah) }}
-                            </td>
-                            <td class="text-center">
-                              @if ($transaction['status'] == 'pending')
-                                <span class="badge bg-warning">Pending</span>
-                              @elseif ($transaction['status'] == 'success')
-                                <span class="badge bg-success">Success</span>
-                              @elseif ($transaction['status'] == 'expired')
-                                <span class="badge bg-secondary">Expired</span>
-                              @elseif ($transaction['status'] == 'failed')
-                                <span class="badge bg-danger">Failed</span>
-                              @elseif ($transaction['status'] == 'canceled')
-                                <span class="badge bg-dark">Canceled</span>
-                              @endif
-                            </td>
-                            <td class="text-center">
-                              <a href="detail-transaksi.html" class="btn btn-light text-center btn-sm"><i class="mdi mdi-history align-middle"></i> Lihat Detail Transaksi</a>
-                            </td>
-                          </tr>
+                            @if ($transaction->status === 'success')
+                              <tr>
+                                <td class="text-center">
+                                  {{ $loop->iteration }}
+                                </td>
+                                <td>
+                                  {{ $transaction->paid_at }}
+                                </td>
+                                <td>
+                                  {{ $transaction->invoice_code }}
+                                </td>
+                                <td class="text-end">
+                                  Rp{{ number_format($transaction->jumlah) }}
+                                </td>
+                                <td class="text-center">
+                                  @if ($transaction['status'] == 'pending')
+                                    <span class="badge bg-warning">Pending</span>
+                                  @elseif ($transaction['status'] == 'success')
+                                    <span class="badge bg-success">Success</span>
+                                  @elseif ($transaction['status'] == 'expired')
+                                    <span class="badge bg-secondary">Expired</span>
+                                  @elseif ($transaction['status'] == 'failed')
+                                    <span class="badge bg-danger">Failed</span>
+                                  @elseif ($transaction['status'] == 'canceled')
+                                    <span class="badge bg-dark">Canceled</span>
+                                  @endif
+                                </td>
+                                <td class="text-center">
+                                  {{-- Detail transaksi (selalu bisa diklik, authorization dijaga di controller show) --}}
+                                  <a href="{{ route('siswa.transaksi.show', $transaction) }}"
+                                    class="btn btn-sm btn-outline-primary">
+                                    <i class="mdi mdi-history align-middle"></i> Detail Transaksi
+                                  </a>
+                                </td>
+                              </tr>
+                            @endif
                           @endforeach
                         </tbody>
                       </table>

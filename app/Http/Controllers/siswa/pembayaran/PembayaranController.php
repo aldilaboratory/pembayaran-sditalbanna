@@ -10,8 +10,13 @@ use Illuminate\Support\Facades\Auth;
 class PembayaranController extends Controller
 {
     public function index() {
-        $student = Auth::user()->student->id;
-        $transactions = Transaction::where('student_id', $student)->get();
+        $studentId = auth()->user()->student->id;
+
+        $transactions = \App\Models\Transaction::with(['schoolFee', 'student'])
+        ->where('student_id', $studentId)
+        ->latest('paid_at')   // paling baru di atas; fallback kalau null akan pakai created_at
+        ->latest('created_at')
+        ->get();
         
         return view('siswa.pembayaran.index', compact('transactions'));
     }
