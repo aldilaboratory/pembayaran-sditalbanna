@@ -20,6 +20,18 @@ class TransactionController extends Controller
         return view('siswa.transaksi.show', compact('transaction'));
     }
 
+    public function showAdmin(Transaction $transaction)
+    {
+        // Tidak perlu cek pemilik, karena sudah lewat middleware 'admin'
+        $transaction->load([
+            'student',
+            'schoolFee.academicYear',
+            'schoolFee.student.studentClass',
+        ]);
+
+        return view('admin.transactions.show', compact('transaction'));
+    }
+
     public function pdf(Transaction $transaction)
     {
         // Ambil student_id dari guard 'siswa' dulu, fallback ke default 'web'

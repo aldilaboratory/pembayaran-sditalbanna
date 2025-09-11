@@ -182,6 +182,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::get('/transactions/{transaction}/invoice',
         [TransactionController::class, 'pdfAdmin'])
         ->name('admin.transactions.pdf');
+
+    Route::get('/transactions/{transaction}', [TransactionController::class, 'showAdmin'])
+        ->name('admin.transactions.show');
+
 });
 
 Route::get('/dev/send-invoice/{transaction}', [TransactionController::class, 'testSendInvoice'])

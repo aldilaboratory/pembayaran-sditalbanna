@@ -92,8 +92,8 @@ class TagihanController extends Controller
             ],
             'expiry' => array(
                 'start_time' => date('Y-m-d H:i:s O'),
-                'unit' => 'minute', 
-                'duration' => 60
+                'unit' => 'second', 
+                'duration' => 40
             ),
             'callbacks' => [
                 'finish' => route('midtrans.finish'),

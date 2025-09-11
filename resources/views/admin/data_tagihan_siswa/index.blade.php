@@ -240,7 +240,22 @@
                                 </td>
                                 <td class="text-center">
                                   @if($fee->status == 'lunas')
-                                      <p>-</p>
+                                    @php
+                                      $successTx = \App\Models\Transaction::where('school_fee_id', $fee->id)
+                                          ->where('student_id', $student->id)
+                                          ->where('status', 'success')
+                                          ->latest('paid_at')
+                                          ->first();
+                                    @endphp
+
+                                    @if ($successTx)
+                                      <a href="{{ route('admin.transactions.show', $successTx) }}"
+                                        class="btn btn-light btn-sm">
+                                        <i class="mdi mdi-history align-middle"></i> Detail Transaksi
+                                      </a>
+                                    @else
+                                      <span class="text-muted">-</span>
+                                    @endif
                                   @else
                                     <a href="javascript:void(0)"
                                       class="btn btn-info btn-sm js-mark-paid"
