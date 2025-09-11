@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Hash;
 class DataAdminController extends Controller
 {
     public function index() {
-        $admins = User::where('role', 'admin')->get();
+        $admins = User::where('role', 'admin')
+                        ->orWhere('role', 'kepala sekolah')
+                        ->get();
 
         return view('admin.data_admin.index', compact('admins'));
     }
