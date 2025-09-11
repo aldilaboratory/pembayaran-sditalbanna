@@ -242,7 +242,15 @@
                                   @if($fee->status == 'lunas')
                                       <p>-</p>
                                   @else
-                                      <a class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
+                                    <a href="javascript:void(0)"
+                                      class="btn btn-info btn-sm js-mark-paid"
+                                      data-url="{{ route('admin.school-fees.mark-paid-offline', $fee) }}"
+                                      data-fee-id="{{ $fee->id }}"
+                                      data-amount="{{ $fee->jumlah }}"
+                                      data-student="{{ $student->nama }}"
+                                      data-bulan="{{ $fee->nama_bulan }}">
+                                      <i class="mdi mdi-square-edit-outline align-middle"></i> Edit
+                                    </a>
                                   @endif
                                 </td>
                               </tr>
@@ -500,6 +508,101 @@
                 autocompleteResults.classList.add('show');
             }
         });
+    });
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+      document.querySelectorAll('.js-mark-paid').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.preventDefault();
+
+          const postUrl = btn.dataset.url;              // sudah final dari data-url
+          const feeId   = btn.dataset.feeId;
+          const amount  = btn.dataset.amount;
+          const amountDisplay = new Intl.NumberFormat('id-ID').format(amount);
+          const student = btn.dataset.student;
+          const bulan   = btn.dataset.bulan;
+
+          const result = await Swal.fire({
+            title: 'Tandai Lunas (Offline)',
+            html: `
+              <div class="text-start">
+                <div class="mb-2"><strong>Siswa:</strong> ${student}</div>
+                <div class="mb-2"><strong>Periode/Bulan:</strong> ${bulan}</div>
+
+                <div class="mb-2"><strong>Jumlah:</strong>
+                  Rp ${amountDisplay}
+                </div>
+
+                <div class="mb-2"><strong>Upload Bukti (jpg/png/webp/pdf):</strong>
+                  <input id="swal-bukti" type="file" accept="image/*,application/pdf" class="swal2-file" />
+                </div>
+
+                <div class="mb-2"><strong>Catatan (opsional):</strong>
+                  <input id="swal-note" type="text" class="swal2-input" placeholder="mis. bayar tunai di TU" style="width:100%">
+                </div>
+              </div>
+            `,
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: 'Tandai Lunas',
+            cancelButtonText: 'Batal',
+            preConfirm: () => {
+              const bukti   = document.getElementById('swal-bukti').files[0];
+              const catatan = document.getElementById('swal-note').value;
+
+              if (!bukti) {
+                Swal.showValidationMessage('Harap upload bukti pembayaran');
+                return false;
+              }
+
+              const fd = new FormData();
+              fd.append('_token', csrf);
+              fd.append('bukti', bukti);
+              // JANGAN kirim jumlah
+              fd.append('catatan', catatan ?? '');
+
+              return fetch(postUrl, {
+                method: 'POST',
+                body: fd,
+                credentials: 'same-origin',
+                headers: { 'Accept':'application/json','X-Requested-With':'XMLHttpRequest' }
+              })
+              .then(async resp => {
+                const ct = resp.headers.get('content-type') || '';
+                if (!resp.ok) throw new Error(`HTTP ${resp.status} - ${await resp.text()}`);
+                if (!ct.includes('application/json')) throw new Error('Unexpected non-JSON response');
+                return resp.json();
+              })
+              .catch(err => {
+                Swal.showValidationMessage('Gagal menyimpan: ' + err.message);
+              });
+            }
+          });
+
+          if (result.isConfirmed && result.value?.ok) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Berhasil',
+              text: 'Tagihan ditandai lunas. Invoice akan diunduh.',
+              timer: 1500,
+              showConfirmButton: false
+            });
+
+            if (result.value.download_url) {
+              setTimeout(() => {
+                window.open(result.value.download_url, '_blank');  // unduh invoice
+                window.location.reload();                           // refresh tabel
+              }, 800);
+            } else {
+              window.location.reload();
+            }
+          }
+        });
+      });
     });
     </script>
 </x-admin.layout>

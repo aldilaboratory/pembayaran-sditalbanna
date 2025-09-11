@@ -93,4 +93,31 @@ class TransactionController extends Controller
             abort(500, 'Gagal mengirim email: '.$e->getMessage());
         }
     }
+
+    public function pdfAdmin(Transaction $transaction)
+    {
+        // route ini sudah dilindungi middleware admin → tidak perlu cek pemilik siswa
+        $transaction->load(['student','schoolFee.academicYear','schoolFee.student.studentClass']);
+
+        // Siapkan logo base64 (aman untuk DomPDF)
+        $logoPath = public_path('images/albanna.png');
+        $logoBase64 = null;
+        if (file_exists($logoPath)) {
+            $ext  = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $logoBase64 = 'data:image/'.$ext.';base64,'.base64_encode(file_get_contents($logoPath));
+        }
+
+        $pdf = Pdf::setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'chroot'               => public_path(),
+            ])->loadView('pdf.invoice', [
+                'transaction' => $transaction,
+                'student'     => $transaction->student,
+                'fee'         => $transaction->schoolFee,
+                'logoBase64'  => $logoBase64,
+            ])->setPaper('a4','portrait');
+
+        return $pdf->download('Invoice-'.$transaction->invoice_code.'.pdf');
+    }
 }

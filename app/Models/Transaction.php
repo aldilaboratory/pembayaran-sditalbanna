@@ -20,6 +20,8 @@ class Transaction extends Model
         'canceled_at',
         'expired_at',
         'snap_token',
+        'payment_proof_path',
+        'admin_note',
     ];
 
     protected $casts = [

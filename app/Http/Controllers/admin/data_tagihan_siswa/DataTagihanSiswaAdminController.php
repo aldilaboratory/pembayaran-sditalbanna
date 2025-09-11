@@ -9,8 +9,11 @@ use App\Models\AcademicYear;
 use App\Models\SchoolFee;
 use App\Models\Student;
 use App\Models\StudentClass;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 
 class DataTagihanSiswaAdminController extends Controller
 {
@@ -140,6 +143,62 @@ class DataTagihanSiswaAdminController extends Controller
             return back()
                 ->with('error', 'Gagal membuat tagihan: ' . $e->getMessage())
                 ->withInput();
+        }
+    }
+
+    public function markPaidOffline(Request $request, SchoolFee $fee)
+    {
+        $v = Validator::make($request->all(), [
+            'bukti'   => 'required|file|mimes:jpg,jpeg,png,webp,pdf|max:5120',
+            'catatan' => 'nullable|string|max:255',
+            // tidak ada 'jumlah' di sini
+        ]);
+
+        if ($v->fails()) {
+            return response()->json(['ok'=>false,'errors'=>$v->errors()], 422);
+        }
+
+        if ($fee->status === 'lunas') {
+            return response()->json(['ok'=>false,'message'=>'Tagihan sudah berstatus lunas.'], 422);
+        }
+
+        try {
+            $result = DB::transaction(function () use ($request, $fee) {
+                $path = $request->file('bukti')->store('payment_proofs', 'public');
+
+                // Pakai nilai dari DB, bukan dari request
+                $amount = (int) $fee->jumlah;
+
+                $fee->status        = 'lunas';
+                $fee->tanggal_lunas = now();
+                $fee->save();
+
+                $tx = \App\Models\Transaction::create([
+                    'student_id'         => $fee->student_id,
+                    'school_fee_id'      => $fee->id,
+                    'jumlah'             => $amount,
+                    'status'             => 'success',
+                    'payment_type'       => 'offline',
+                    'paid_at'            => now(),
+                    'payment_proof_path' => $path,
+                    'admin_note'         => $request->catatan,
+                ]);
+
+                return [
+                    'download_url' => route('admin.transactions.pdf', $tx),
+                    'invoice_code' => $tx->invoice_code,
+                ];
+            });
+
+            return response()->json([
+                'ok'           => true,
+                'message'      => 'Tagihan ditandai lunas dan transaksi dibuat.',
+                'download_url' => $result['download_url'],
+                'invoice_code' => $result['invoice_code'],
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error('markPaidOffline error: '.$e->getMessage());
+            return response()->json(['ok'=>false,'message'=>'Terjadi kesalahan server.'], 500);
         }
     }
 }

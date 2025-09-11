@@ -173,6 +173,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::put('/data_admin/{id}', [DataAdminController::class, 'update'])->name('admin.data_admin.update');
     Route::delete('/data_admin/{id}', [DataAdminController::class, 'destroy'])->name('admin.data_admin.destroy');
     Route::post('/data_admin', [DataAdminController::class, 'store'])->name('admin.data_admin.store');
+
+    Route::post('/school-fees/{fee}/mark-paid-offline',
+        [DataTagihanSiswaAdminController::class, 'markPaidOffline'])
+        ->name('admin.school-fees.mark-paid-offline');
+
+    // PDF invoice untuk admin (tanpa guard siswa)
+    Route::get('/transactions/{transaction}/invoice',
+        [TransactionController::class, 'pdfAdmin'])
+        ->name('admin.transactions.pdf');
 });
 
 Route::get('/dev/send-invoice/{transaction}', [TransactionController::class, 'testSendInvoice'])
