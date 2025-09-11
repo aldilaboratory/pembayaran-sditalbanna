@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InvoicePaidMail;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class TransactionController extends Controller
 {
@@ -48,5 +50,47 @@ class TransactionController extends Controller
                 ])->setPaper('a4','portrait');
 
         return $pdf->download('Invoice-'.$transaction->invoice_code.'.pdf');
+    }
+
+    public function testSendInvoice(Transaction $transaction)
+    {
+        // Ambil email siswa: pakai kolom students.email atau fallback ke user->email
+        $student = $transaction->student;
+        $to = $student->email ?? $student->user->email ?? null;
+        if (!$to) {
+            \Log::warning('Email siswa kosong pada transaksi '.$transaction->id);
+            abort(422, 'Email siswa tidak tersedia');
+        }
+
+        // Siapkan logo base64 (cara paling aman untuk DomPDF)
+        $logoPath = public_path('images/albanna.png');
+        $logoBase64 = null;
+        if (file_exists($logoPath)) {
+            $ext  = pathinfo($logoPath, PATHINFO_EXTENSION);
+            $logoBase64 = 'data:image/'.$ext.';base64,'.base64_encode(file_get_contents($logoPath));
+        }
+
+        // Generate PDF (pakai view pdf.invoice milikmu)
+        $pdf = Pdf::setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled'      => true,
+                    'chroot'               => public_path(),
+                ])
+                ->loadView('pdf.invoice', [
+                    'transaction' => $transaction,
+                    'student'     => $transaction->student,
+                    'fee'         => $transaction->schoolFee,
+                    'logoBase64'  => $logoBase64, // pastikan blade pakai ini jika tersedia
+                ])
+                ->setPaper('a4','portrait');
+
+        // Kirim via Mailtrap
+        try {
+            Mail::to($to)->send(new InvoicePaidMail($transaction, $pdf->output()));
+            return 'OK: invoice terkirim ke '.$to;
+        } catch (\Throwable $e) {
+            \Log::error('Mailtrap send error: '.$e->getMessage());
+            abort(500, 'Gagal mengirim email: '.$e->getMessage());
+        }
     }
 }

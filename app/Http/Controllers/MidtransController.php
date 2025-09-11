@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InvoicePaidMail;
 use App\Models\Transaction;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class MidtransController extends Controller
 {
@@ -100,27 +103,59 @@ class MidtransController extends Controller
             Log::info('SchoolFee updated to LUNAS: ' . $schoolFee->id);
         }
 
+        try {
+            $student = $transaction->student;
+            $to = $student->email ?? $student->user->email ?? null;
+
+            if ($to) {
+                $logoPath = public_path('images/albanna.png');
+                $logoBase64 = null;
+                if (file_exists($logoPath)) {
+                    $ext  = pathinfo($logoPath, PATHINFO_EXTENSION);
+                    $logoBase64 = 'data:image/'.$ext.';base64,'.base64_encode(file_get_contents($logoPath));
+                }
+
+                $pdf = Pdf::setOptions([
+                            'isHtml5ParserEnabled' => true,
+                            'isRemoteEnabled'      => true,
+                            'chroot'               => public_path(),
+                        ])
+                        ->loadView('pdf.invoice', [
+                            'transaction' => $transaction,
+                            'student'     => $student,
+                            'fee'         => $transaction->schoolFee,
+                            'logoBase64'  => $logoBase64,
+                        ])->setPaper('a4','portrait');
+
+                Mail::to($to)->send(new InvoicePaidMail($transaction, $pdf->output()));
+            } else {
+                \Log::warning('Lewati email invoice: email siswa kosong. Transaksi '.$transaction->id);
+            }
+        } catch (\Throwable $e) {
+            \Log::error('Gagal kirim email invoice: '.$e->getMessage());
+        }
+
         // === KIRIM WHATSAPP via Fonnte ===
         $student = $transaction->student;
         $target  = $student?->whatsapp_target; // accessor normalisasi
 
         if ($target) {
-        // Susun pesan (sesuaikan field di database)
-        $namaSiswa = $student->nama ?? 'Siswa';
-        $tagihan   = $transaction->schoolFee?->jenis_tagihan ?? 'SPP';
-        $periode   = $transaction->schoolFee?->nama_bulan ?? null;
-        $nilai     = number_format($transaction->jumlah ?? 0, 0, ',', '.');
+            // Susun pesan (sesuaikan field di database)
+            $namaSiswa = $student->nama ?? 'Siswa';
+            $tagihan   = $transaction->schoolFee?->jenis_tagihan ?? 'SPP';
+            $periode   = $transaction->schoolFee?->nama_bulan ?? null;
+            $nilai     = number_format($transaction->jumlah ?? 0, 0, ',', '.');
 
-        $barisPeriode = $periode ? "\nPeriode: {$periode}" : '';
-        $pesan = "Halo Orang Tua/Wali {$namaSiswa},\n"
-               . "Pembayaran *{$tagihan}* sebesar *Rp {$nilai}* telah *DITERIMA* ✅.\n"
-               . "Invoice: {$transaction->invoice_code}\n"
-               . "Tanggal: ".now('Asia/Jakarta')->format('d M Y H:i').$barisPeriode."\n"
-               . "Terima kasih atas kerjasamanya.";
+            $barisPeriode = $periode ? "\nPeriode: {$periode}" : '';
+            $pesan = "Halo Orang Tua/Wali {$namaSiswa},\n"
+                . "Pembayaran *{$tagihan}* sebesar *Rp {$nilai}* telah *DITERIMA* ✅.\n"
+                . "Invoice: {$transaction->invoice_code}\n"
+                . "Tanggal: ".now('Asia/Jakarta')->format('d M Y H:i').$barisPeriode."\n"
+                . "Terima kasih atas kerjasamanya.";
 
-        // Kirim (disarankan via Queue di produksi)
-        app(\App\Services\FonnteService::class)->send($target, $pesan, ['typing' => true]);
-    }
+            // Kirim (disarankan via Queue di produksi)
+            app(\App\Services\FonnteService::class)->send($target, $pesan, ['typing' => true]);
+        }
     }
 
     private function setTransactionExpired(Transaction $transaction): void

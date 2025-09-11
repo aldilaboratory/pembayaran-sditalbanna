@@ -175,4 +175,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::post('/data_admin', [DataAdminController::class, 'store'])->name('admin.data_admin.store');
 });
 
+Route::get('/dev/send-invoice/{transaction}', [TransactionController::class, 'testSendInvoice'])
+    ->middleware(['auth']); // batasi akses
+
+// Route::get('/dev/mailtrap-test', function () {
+//     try {
+//         \Mail::raw('Hello from Albanna (Mailtrap OK)', function ($m) {
+//             $m->to('apa-saja@contoh.com')->subject('Mailtrap connection test');
+//         });
+//         return 'Mailtrap RAW OK';
+//     } catch (\Throwable $e) {
+//         \Log::error('Mailtrap RAW error: '.$e->getMessage());
+//         return 'ERROR: '.$e->getMessage();
+//     }
+//     })->middleware('auth');
+
 require __DIR__.'/auth.php';
