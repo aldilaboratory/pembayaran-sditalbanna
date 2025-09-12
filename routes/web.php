@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\data_admin\DataAdminController;
 use App\Http\Controllers\admin\profil_siswa\ProfilSiswaController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\kepala_sekolah\DashboardKepalaSekolahController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionController;
@@ -202,5 +203,22 @@ Route::get('/dev/send-invoice/{transaction}', [TransactionController::class, 'te
 //         return 'ERROR: '.$e->getMessage();
 //     }
 //     })->middleware('auth');
+
+// Route untuk Kepala Sekolah
+Route::middleware(['auth', 'kepala_sekolah'])->prefix('kepala_sekolah')->group(function() {
+    // Route untuk Dashboard
+    Route::get('/', function () {
+        return redirect()->route('kepala_sekolah.dashboard');
+    });
+    Route::get('/dashboard', [DashboardKepalaSekolahController::class, 'index'])->name('kepala_sekolah.dashboard');
+
+    // Route untuk Laporan Tunggakan Siswa
+    // Route::get('/laporan_tunggakan_siswa', [LaporanTunggakanSiswaController::class, 'index'])->name('kepala_sekolah.laporan_tunggakan_siswa');
+    // Route::get('/laporan-tunggakan-siswa/pdf',  [LaporanTunggakanSiswaController::class, 'pdf'])->name('kepala_sekolah.laporan_tunggakan_siswa.pdf');
+    
+    // // Route untuk Laporan Penerimaan
+    // Route::get('/laporan_penerimaan', [LaporanPenerimaanController::class, 'index'])->name('kepala_sekolah.laporan_penerimaan');
+    // Route::get('laporan-penerimaan/pdf',  [LaporanPenerimaanController::class,'pdf'])->name('kepala_sekolah.laporan_penerimaan.pdf');
+});
 
 require __DIR__.'/auth.php';

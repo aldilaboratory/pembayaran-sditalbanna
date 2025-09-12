@@ -173,7 +173,7 @@ class DataTagihanSiswaAdminController extends Controller
                 $fee->tanggal_lunas = now();
                 $fee->save();
 
-                $tx = \App\Models\Transaction::create([
+                $tx = Transaction::create([
                     'student_id'         => $fee->student_id,
                     'school_fee_id'      => $fee->id,
                     'jumlah'             => $amount,

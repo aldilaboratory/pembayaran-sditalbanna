@@ -13,7 +13,7 @@ class DataAdminController extends Controller
 {
     public function index() {
         $admins = User::where('role', 'admin')
-                        ->orWhere('role', 'kepala sekolah')
+                        ->orWhere('role', 'kepala_sekolah')
                         ->get();
 
         return view('admin.data_admin.index', compact('admins'));

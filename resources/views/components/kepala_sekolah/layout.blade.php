@@ -25,19 +25,19 @@
     <div class="container-scroller">
       @include('sweetalert::alert')
       <!-- partial:partials/_navbar.html -->
-      @include('components.admin.header')
+      @include('components.kepala_sekolah.header')
       <!-- partial -->  
 
       <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_sidebar.html -->
-        @include('components.admin.sidebar')
+        @include('components.kepala_sekolah.sidebar')
 
       {{ $slot }}
 
       </div>
       <!-- page-body-wrapper ends -->
 
-      {{-- @include('components.admin.footer') --}}
+      {{-- @include('components.kepala_sekolah.footer') --}}
 
     </div>
     <!-- container-scroller -->
