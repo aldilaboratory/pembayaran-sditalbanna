@@ -7,28 +7,33 @@
                 <h2>Dashboard Admin,  <span class="fw-bold">{{ Auth::user()->name }}</span></h2>
               </div>
             </div>
+            @php
+              $fmt = fn($v) => 'Rp'.number_format((int)$v, 0, ',', '.');
+            @endphp
             <div class="row">
               <div class="col-4 grid-margin stretch-card">
                 <div class="card border-primary rounded">
                   <div class="card-body">
                     <p class="card-text">Jumlah Siswa</p>
-                    <h3 class="card-text text-primary">84</h3>
+                    <h3 class="card-text text-primary">{{ $students }}</h3>
                   </div>
                 </div>
               </div>
               <div class="col-4 grid-margin stretch-card">
                 <div class="card border-success rounded">
                   <div class="card-body">
-                    <p class="card-text">Jumlah Pembayaran Lunas</p>
-                    <h5 class="card-text text-success">Rp252.000.000</h5>
+                    <p class="card-text mb-0">Jumlah Pembayaran Lunas</p>
+                    <p class="card-text">Tahun Ajaran: {{ $latestAcademicYear }}</p>
+                    <h5 class="card-text text-success">{{ $fmt($penerimaanTotal) }}</h5>
                   </div>
                 </div>
               </div>
               <div class="col-4 grid-margin stretch-card">
                 <div class="card border-danger rounded">
                   <div class="card-body">
-                    <p class="card-text">Jumlah Tunggakan Siswa</p>
-                    <h5 class="card-text text-danger">Rp26.000.000</h5>
+                    <p class="card-text mb-0">Jumlah Tunggakan Siswa</p>
+                    <p class="card-text">Tahun Ajaran: {{ $latestAcademicYear }}</p>
+                    <h5 class="card-text text-danger">{{ $fmt($tunggakanTotal) }}</h5>
                   </div>
                 </div>
               </div>

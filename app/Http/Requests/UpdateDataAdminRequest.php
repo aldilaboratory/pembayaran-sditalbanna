@@ -29,7 +29,7 @@ class UpdateDataAdminRequest extends FormRequest
             'username' => [Rule::unique('users','username')->ignore($userId)],
             // password opsional saat edit
             'password' => ['nullable','string','min:8'],
-            'role'     => ['required','in:admin,kepala sekolah'],
+            'role'     => ['required','in:admin,kepala_sekolah'],
         ];
     }
 
