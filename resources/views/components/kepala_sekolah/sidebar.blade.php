@@ -9,19 +9,19 @@
             </li>
             <span class="mt-3 mx-3"><small><strong>Laporan</strong></small></span>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="{{ route('kepala_sekolah.laporan_tunggakan_siswa') }}">
                 <i class="mdi mdi-file-document-alert menu-icon"></i>
                 <span class="menu-title">Laporan Tunggakan Siswa</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="{{ route('kepala_sekolah.laporan_penerimaan') }}">
                 <i class="mdi mdi-file-document-check menu-icon"></i>
                 <span class="menu-title">Laporan Penerimaan</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="{{ route('kepala_sekolah.data_admin') }}">
                 <i class="mdi mdi-account-cog menu-icon"></i>
                 <span class="menu-title">Data Admin</span>
               </a>

@@ -3,13 +3,13 @@
           <div class="content-wrapper">
             <div class="row">
               <div class="col-md-12">
-                <a class="btn btn-light border-primary" href="{{ route('admin.laporan_penerimaan.pdf', request()->query()) }}"><i class="mdi mdi-download align-middle"></i> Download Laporan (pdf)</a>
+                <a class="btn btn-light border-primary" href="{{ route('kepala_sekolah.laporan_penerimaan.pdf', request()->query()) }}"><i class="mdi mdi-download align-middle"></i> Download Laporan (pdf)</a>
                 <div class="card rounded mt-3">
                   <div class="card-body">
                     <h4 class="card-title">Laporan Penerimaan Pembayaran Siswa</h4>
                     <div class="d-flex gap-3">
                       {{-- Filter Tahun Ajaran --}}
-                      <form method="GET" action="{{ route('admin.laporan_penerimaan') }}" class="d-flex gap-3">
+                      <form method="GET" action="{{ route('kepala_sekolah.laporan_penerimaan') }}" class="d-flex gap-3">
                         <div class="d-flex flex-column">
                           <p class="mb-1">Tahun Ajaran:</p>
                           <select name="academic_year_id" class="form-select text-reset" onchange="this.form.submit()">

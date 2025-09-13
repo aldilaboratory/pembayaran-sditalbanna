@@ -63,7 +63,7 @@
                                 <td class="text-center">
                                   {{-- Detail transaksi (selalu bisa diklik, authorization dijaga di controller show) --}}
                                   <a href="{{ route('siswa.transaksi.show', $transaction) }}"
-                                    class="btn btn-sm btn-outline-primary">
+                                    class="btn btn-light text-center btn-sm">
                                     <i class="mdi mdi-history align-middle"></i> Detail Transaksi
                                   </a>
                                 </td>

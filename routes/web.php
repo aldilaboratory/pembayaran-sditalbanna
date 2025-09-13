@@ -3,7 +3,6 @@
 use App\Http\Controllers\admin\data_admin\DataAdminController;
 use App\Http\Controllers\admin\profil_siswa\ProfilSiswaController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\kepala_sekolah\DashboardKepalaSekolahController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionController;
@@ -23,6 +22,12 @@ use App\Http\Controllers\Admin\Data_Tagihan_Siswa\DataTagihanSiswaAdminControlle
 use App\Http\Controllers\Admin\Data_Kelas\DataKelasController;
 use App\Http\Controllers\Admin\Data_Angkatan\DataAngkatanController;
 use App\Http\Controllers\Admin\Data_Tahun_Ajaran\DataTahunAjaranController;
+
+// Route untuk Kepala Sekolah
+use App\Http\Controllers\kepala_sekolah\DashboardKepalaSekolahController;
+use App\Http\Controllers\kepala_sekolah\KS_LaporanTunggakanSiswaController;
+use App\Http\Controllers\kepala_sekolah\KS_LaporanPenerimaanController;
+use App\Http\Controllers\kepala_sekolah\KS_DataAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -212,13 +217,21 @@ Route::middleware(['auth', 'kepala_sekolah'])->prefix('kepala_sekolah')->group(f
     });
     Route::get('/dashboard', [DashboardKepalaSekolahController::class, 'index'])->name('kepala_sekolah.dashboard');
 
-    // Route untuk Laporan Tunggakan Siswa
-    // Route::get('/laporan_tunggakan_siswa', [LaporanTunggakanSiswaController::class, 'index'])->name('kepala_sekolah.laporan_tunggakan_siswa');
-    // Route::get('/laporan-tunggakan-siswa/pdf',  [LaporanTunggakanSiswaController::class, 'pdf'])->name('kepala_sekolah.laporan_tunggakan_siswa.pdf');
-    
-    // // Route untuk Laporan Penerimaan
-    // Route::get('/laporan_penerimaan', [LaporanPenerimaanController::class, 'index'])->name('kepala_sekolah.laporan_penerimaan');
-    // Route::get('laporan-penerimaan/pdf',  [LaporanPenerimaanController::class,'pdf'])->name('kepala_sekolah.laporan_penerimaan.pdf');
+    // Laporan Tunggakan (lihat + pdf)
+        Route::get('/laporan_tunggakan_siswa', [KS_LaporanTunggakanSiswaController::class, 'index'])
+            ->name('kepala_sekolah.laporan_tunggakan_siswa');
+        Route::get('/laporan-tunggakan-siswa/pdf', [KS_LaporanTunggakanSiswaController::class, 'pdf'])
+            ->name('kepala_sekolah.laporan_tunggakan_siswa.pdf');
+
+        // Laporan Penerimaan (lihat + pdf)
+        Route::get('/laporan_penerimaan', [KS_LaporanPenerimaanController::class, 'index'])
+            ->name('kepala_sekolah.laporan_penerimaan');
+        Route::get('/laporan-penerimaan/pdf', [KS_LaporanPenerimaanController::class, 'pdf'])
+            ->name('kepala_sekolah.laporan_penerimaan.pdf');
+
+        // Data Admin (read-only untuk kepala sekolah)
+        Route::get('/data_admin', [KS_DataAdminController::class, 'index'])
+            ->name('kepala_sekolah.data_admin');
 });
 
 require __DIR__.'/auth.php';
