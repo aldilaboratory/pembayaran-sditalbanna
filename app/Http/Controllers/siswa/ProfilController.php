@@ -1,19 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\admin\profil_siswa;
+namespace App\Http\Controllers\Siswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use Illuminate\Http\Request;
 
-class ProfilSiswaController extends Controller
+class ProfilController extends Controller
 {
-    public function edit(Student $student) {
-        return view('admin.profil_siswa.edit', compact('student'));
+    public function edit() {
+        $student = Student::where('user_id', auth()->id())->firstOrFail();
+
+        return view('siswa.profil.edit', compact('student'));
     }
 
-    public function update(Request $request, Student $student)
+    public function update(Request $request)
     {
+        $student = Student::where('user_id', auth()->id())->firstOrFail();
+
         $data = $request->validate([
             'nama'   => 'required|string|max:255',
             'nis'    => 'required|string|max:30',
@@ -33,8 +37,6 @@ class ProfilSiswaController extends Controller
 
         $student->update($data);
 
-        return redirect()
-            ->route('admin.profil_siswa.edit', $student)
-            ->with('success', 'Profil berhasil diperbarui.');
+        return back()->with('success', 'Profil berhasil diperbarui.');
     }
 }

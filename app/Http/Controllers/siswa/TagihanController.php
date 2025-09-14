@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Siswa\Tagihan;
+namespace App\Http\Controllers\Siswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\SchoolFee;

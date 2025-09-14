@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\kepala_sekolah;
+namespace App\Http\Controllers\Kepala_Sekolah;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDataAdminRequest;

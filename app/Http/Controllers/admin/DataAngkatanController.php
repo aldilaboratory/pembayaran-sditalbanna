@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin\data_angkatan;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSchoolYearsRequest;

@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\admin\data_admin\DataAdminController;
-use App\Http\Controllers\admin\profil_siswa\ProfilSiswaController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProfileController;
@@ -9,25 +7,27 @@ use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 // Route untuk Siswa
 use App\Http\Controllers\Siswa\DashboardController;
-use App\Http\Controllers\Siswa\Profil\ProfilController;
-use App\Http\Controllers\Siswa\Tagihan\TagihanController;
-use App\Http\Controllers\Siswa\Pembayaran\PembayaranController;
+use App\Http\Controllers\Siswa\ProfilController;
+use App\Http\Controllers\Siswa\TagihanController;
+use App\Http\Controllers\Siswa\PembayaranController;
 
 // Route untuk Admin
 use App\Http\Controllers\Admin\DashboardAdminController;
-use App\Http\Controllers\Admin\Data_Siswa\DataSiswaAdminController;
-use App\Http\Controllers\Admin\Laporan_Tunggakan_Siswa\LaporanTunggakanSiswaController;
-use App\Http\Controllers\Admin\Laporan_Penerimaan\LaporanPenerimaanController;
-use App\Http\Controllers\Admin\Data_Tagihan_Siswa\DataTagihanSiswaAdminController;
-use App\Http\Controllers\Admin\Data_Kelas\DataKelasController;
-use App\Http\Controllers\Admin\Data_Angkatan\DataAngkatanController;
-use App\Http\Controllers\Admin\Data_Tahun_Ajaran\DataTahunAjaranController;
+use App\Http\Controllers\Admin\DataSiswaAdminController;
+use App\Http\Controllers\Admin\LaporanTunggakanSiswaController;
+use App\Http\Controllers\Admin\LaporanPenerimaanController;
+use App\Http\Controllers\Admin\DataTagihanSiswaAdminController;
+use App\Http\Controllers\Admin\DataKelasController;
+use App\Http\Controllers\Admin\DataAngkatanController;
+use App\Http\Controllers\Admin\DataTahunAjaranController;
+use App\Http\Controllers\Admin\DataAdminController;
+use App\Http\Controllers\Admin\ProfilSiswaController;
 
 // Route untuk Kepala Sekolah
-use App\Http\Controllers\kepala_sekolah\DashboardKepalaSekolahController;
-use App\Http\Controllers\kepala_sekolah\KS_LaporanTunggakanSiswaController;
-use App\Http\Controllers\kepala_sekolah\KS_LaporanPenerimaanController;
-use App\Http\Controllers\kepala_sekolah\KS_DataAdminController;
+use App\Http\Controllers\Kepala_Sekolah\DashboardKepalaSekolahController;
+use App\Http\Controllers\Kepala_Sekolah\KS_LaporanTunggakanSiswaController;
+use App\Http\Controllers\Kepala_Sekolah\KS_LaporanPenerimaanController;
+use App\Http\Controllers\Kepala_Sekolah\KS_DataAdminController;
 
 /*
 |--------------------------------------------------------------------------

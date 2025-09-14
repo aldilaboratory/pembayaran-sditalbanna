@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Data_Siswa;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStudentClassesRequest;
