@@ -1,6 +1,4 @@
 <x-siswa.layout title="Checkout Pembayaran">
-  <div class="main-panel">
-    <div class="content-wrapper">
       <div class="row justify-content-center">
         <div class="col-md-8">
           <div class="card">
@@ -108,8 +106,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
 
   <script src="https://app.sandbox.midtrans.com/snap/snap.js" 
           data-client-key="{{ config('midtrans.clientKey') }}"></script>

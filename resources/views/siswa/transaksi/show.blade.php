@@ -1,7 +1,5 @@
 {{-- resources/views/siswa/transaksi/show.blade.php --}}
 <x-siswa.layout title="Detail Transaksi">
-  <div class="main-panel">
-    <div class="content-wrapper">
       <a class="btn btn-light border-primary mb-3" href="{{ route('siswa.transaksi.pdf', $transaction) }}"><i class="mdi mdi-download align-middle"></i> Download Invoice (pdf)</a>
       <div class="card rounded">
         <div class="card-body">
@@ -60,6 +58,4 @@
           <p class="text-muted mb-0">Invoice ini dihasilkan otomatis oleh sistem.</p>
         </div>
       </div>
-    </div>
-  </div>
 </x-siswa.layout>
