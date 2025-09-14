@@ -1,6 +1,4 @@
 <x-admin.layout title="Detail Transaksi">
-  <div class="main-panel">
-    <div class="content-wrapper">
       <a class="btn btn-light border-primary mb-3"
          href="{{ route('admin.transactions.pdf', $transaction) }}">
         Unduh Invoice (PDF)
@@ -61,6 +59,4 @@
 
         </div>
       </div>
-    </div>
-  </div>
 </x-admin.layout>

@@ -7,6 +7,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'SD Albanna' }}</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{ asset('assets/css/materialdesignicons.min.css') }}" />
@@ -22,6 +23,7 @@
   </head>
   <body>
     <div class="container-scroller">
+      @include('sweetalert::alert')
       <!-- partial:partials/_navbar.html -->
       @include('components.siswa.header')
       <!-- partial -->  
@@ -30,7 +32,12 @@
         <!-- partial:partials/_sidebar.html -->
         @include('components.siswa.sidebar')
 
-      {{ $slot }}
+        <div class="main-panel">
+          <div class="content-wrapper">
+            {{ $slot }}
+          </div>
+          @include('components.siswa.footer')
+        </div>
 
       </div>
       <!-- page-body-wrapper ends -->

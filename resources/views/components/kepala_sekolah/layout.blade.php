@@ -32,7 +32,12 @@
         <!-- partial:partials/_sidebar.html -->
         @include('components.kepala_sekolah.sidebar')
 
-      {{ $slot }}
+        <div class="main-panel">
+          <div class="content-wrapper">
+            {{ $slot }}
+          </div>
+          @include('components.kepala_sekolah.footer')
+        </div>
 
       </div>
       <!-- page-body-wrapper ends -->

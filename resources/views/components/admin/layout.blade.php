@@ -32,12 +32,15 @@
         <!-- partial:partials/_sidebar.html -->
         @include('components.admin.sidebar')
 
-      {{ $slot }}
+        <div class="main-panel">
+          <div class="content-wrapper">
+            {{ $slot }}
+          </div>
+          @include('components.admin.footer')
+        </div>
 
       </div>
       <!-- page-body-wrapper ends -->
-
-      {{-- @include('components.admin.footer') --}}
 
     </div>
     <!-- container-scroller -->
