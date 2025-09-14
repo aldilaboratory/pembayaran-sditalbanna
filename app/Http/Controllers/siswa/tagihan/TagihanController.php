@@ -14,52 +14,83 @@ class TagihanController extends Controller
 {
     public function index(){
         $user = Auth::user();
-        $student = Student::where('user_id', $user->id)->first();
+        $student = Student::where('user_id', $user->id)->firstOrFail();
 
-        if (!$student) {
-            return redirect()->back()->with('error', 'Data siswa tidak ditemukan');
-        }
-        
         $tagihanSiswa = SchoolFee::where('student_id', $student->id)
-                                ->orderBy('jatuh_tempo', 'desc')
-                                ->get();
+            ->orderBy('jatuh_tempo','desc')
+            ->get();
+        
+        // Ambil pending yang MASIH valid (created_at >= now()-TTL)
+        $ttlMinutes = 60; // samakan dengan expiry.duration
+        $pendings = Transaction::select('id','school_fee_id','expired_at','created_at')
+            ->where('student_id', $student->id)
+            ->where('status', 'pending')
+            ->where(function($q) use ($ttlMinutes){
+                $q->where('expired_at', '>', now())
+                ->orWhere(function($qq) use ($ttlMinutes){
+                    $qq->whereNull('expired_at')
+                        ->where('created_at', '>', now()->subMinutes($ttlMinutes));
+                });
+            })
+            ->get()->keyBy('school_fee_id');
 
-        return view('siswa.tagihan.index', compact('tagihanSiswa', 'student'));
+        return view('siswa.tagihan.index', compact('tagihanSiswa','student','pendings','ttlMinutes'));
     }
 
     public function process(Request $request, $schoolFeeId)
     {
-        $user = Auth::user();
-        $student = Student::where('user_id', $user->id)->first();
-        $schoolFee = SchoolFee::findOrFail($schoolFeeId);
+        $user     = Auth::user();
+        $student  = Student::where('user_id', $user->id)->firstOrFail();
+        $schoolFee= SchoolFee::findOrFail($schoolFeeId);
 
-        // Validasi apakah tagihan milik siswa ini
-        if ($schoolFee->student_id !== $student->id) {
-            return redirect()->back()->with('error', 'Tagihan tidak valid');
-        }
-
-        // Cek apakah sudah lunas
+        abort_if($schoolFee->student_id !== $student->id, 403, 'Tagihan tidak valid');
         if ($schoolFee->status === 'lunas') {
-            return redirect()->back()->with('error', 'Tagihan sudah lunas');
+            return back()->with('error', 'Tagihan sudah lunas');
         }
 
-        // Cek apakah ada transaksi pending
+        $ttl = (int) config('midtrans.pending_ttl', 60); // menit
+
+        // 1) Tandai semua pending yang sudah kadaluarsa
+        Transaction::where('student_id', $student->id)
+            ->where('school_fee_id', $schoolFee->id)
+            ->where('status', 'pending')
+            ->where(function ($q) use ($ttl) {
+                $q->where('expired_at', '<=', now())
+                ->orWhere(function ($qq) use ($ttl) {
+                    // fallback utk record lama yang belum punya expired_at
+                    $qq->whereNull('expired_at')
+                        ->where('created_at', '<=', now()->subMinutes($ttl));
+                });
+            })
+            ->update(['status' => 'expired', 'expired_at' => now()]);
+
+        // 2) Cek lagi apakah masih ada pending yang MASIH VALID
         $activeTransaction = Transaction::where('school_fee_id', $schoolFee->id)
-                                        ->where('student_id', $student->id)
-                                        ->where('status', 'pending')
-                                        ->first();
+            ->where('student_id', $student->id)
+            ->where('status', 'pending')
+            ->where(function ($q) use ($ttl) {
+                $q->where('expired_at', '>', now())
+                ->orWhere(function ($qq) use ($ttl) {
+                    $qq->whereNull('expired_at')
+                        ->where('created_at', '>', now()->subMinutes($ttl));
+                });
+            })
+            ->latest('id')
+            ->first();
 
         if ($activeTransaction) {
             return redirect()->route('checkout', $activeTransaction->id);
         }
 
-        // Jika tidak ada transaksi pending, atau yang ada sudah expired/failed
-        // Buat transaksi baru
+        $ttl = config('midtrans.pending_ttl', 60);
+
+        // 3) Buat transaksi baru (pastikan expired_at diisi)
         $transaction = Transaction::create([
-            'student_id' => $student->id,
-            'school_fee_id' => $schoolFee->id,
-            'jumlah' => $schoolFee->jumlah,
-            'status' => 'pending',
+            'student_id'   => $student->id,
+            'school_fee_id'=> $schoolFee->id,
+            'jumlah'       => $schoolFee->jumlah,
+            'status'       => 'pending',
+            'expired_at'   => now()->addMinutes($ttl),
         ]);
 
         // Konfigurasi Midtrans
@@ -77,9 +108,10 @@ class TagihanController extends Controller
                 'order_id'     => $orderId,
                 'gross_amount' => (int) $transaction->jumlah,
             ],
+            'override_notification_url' => route('midtrans.notification'),
             'customer_details' => [
                 'name' => $student->nama,
-                // 'email' => $student->email,
+                'email' => $student->email,
                 'phone' => $student->nomor_whatsapp_orang_tua_wali ?? '',
             ],
             'item_details' => [
@@ -92,8 +124,8 @@ class TagihanController extends Controller
             ],
             'expiry' => array(
                 'start_time' => date('Y-m-d H:i:s O'),
-                'unit' => 'second', 
-                'duration' => 40
+                'unit' => 'minute', 
+                'duration' => $ttl,  
             ),
             'callbacks' => [
                 'finish' => route('midtrans.finish'),
@@ -121,28 +153,39 @@ class TagihanController extends Controller
         }
     }
 
-    public function checkout(Transaction $transaction)
+    public function checkout(Transaction $transaction) 
     {
-        // Validasi transaksi milik siswa ini
-        $student = Student::where('user_id', Auth::id())->first();
+        $student = Student::where('user_id', Auth::id())->firstOrFail();
+        abort_if($transaction->student_id !== $student->id, 403);
 
-        if ($transaction->student_id !== $student->id) {
-            abort(403, 'Transaksi tidak valid');
+        // anggap kadaluarsa jika sudah melewati expired_at
+        if ($transaction->status === 'pending' && $transaction->expired_at?->lt(now())) {
+            $transaction->update(['status' => 'expired']);
+            return redirect()
+                ->route('siswa.tagihan.index')
+                ->with('warning', 'Transaksi kadaluarsa. Silakan klik Bayar lagi.');
         }
 
-        // Jika transaksi expired/failed/canceled, redirect ke process baru
-        if (in_array($transaction->status, ['expired', 'failed', 'canceled'])) {
-            return redirect()->route('checkout-process', $transaction->school_fee_id);
+        if (in_array($transaction->status, ['expired','failed','canceled'])) {
+            return redirect()
+                ->route('siswa.tagihan.index')
+                ->with('warning', 'Transaksi tidak aktif. Silakan klik Bayar lagi.');
         }
 
-        // Jika transaksi success, redirect ke tagihan
+        // (opsional) tanya status realtime ke Midtrans
+        // try {
+        //   $st = \Midtrans\Transaction::status($transaction->invoice_code);
+        //   if (($st->transaction_status ?? null) === 'expire') {
+        //       $transaction->update(['status' => 'expired', 'expired_at' => now()]);
+        //       return redirect()->route('checkout-process', $transaction->school_fee_id);
+        //   }
+        // } catch (\Throwable $e) {}
+
         if ($transaction->status === 'success') {
-            return redirect()->route('siswa.tagihan.index')
-                            ->with('success', 'Tagihan sudah lunas');
+            return redirect()->route('siswa.tagihan.index')->with('success','Tagihan sudah lunas');
         }
 
         $schoolFee = $transaction->schoolFee;
-
-        return view('siswa.tagihan.checkout', compact('transaction', 'schoolFee', 'student'));
+        return view('siswa.tagihan.checkout', compact('transaction','schoolFee','student'));
     }
 }

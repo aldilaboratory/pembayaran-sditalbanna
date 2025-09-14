@@ -64,6 +64,9 @@
                             <td class="text-end">
                               {{ $tagihan->tanggal_lunas ? \Carbon\Carbon::parse($tagihan->tanggal_lunas)->format('d F Y') : '-' }}
                             </td>
+                            @php
+                              $pendingTransaction = $pendings[$tagihan->id] ?? null;
+                            @endphp
                             @if ($tagihan->status === 'lunas')
                               {{-- Kolom STATUS --}}
                               <td class="text-center">
@@ -90,27 +93,18 @@
                                 @endif
                               </td>
 
-                            @elseif ($tagihan->status === 'belum_lunas')
-                              {{-- Kolom STATUS --}}
+                            @else
                               <td class="text-center">
-                                @php
-                                  $pendingTransaction = \App\Models\Transaction::where('school_fee_id', $tagihan->id)
-                                      ->where('student_id', $student->id)
-                                      ->where('status', 'pending')
-                                      ->first();
-                                @endphp
-
+                                @php $pendingTransaction = $pendings[$tagihan->id] ?? null; @endphp
                                 @if ($pendingTransaction)
                                   <label class="badge badge-warning">Menunggu Pembayaran</label>
                                 @else
                                   <label class="badge badge-danger">Belum Lunas</label>
                                 @endif
                               </td>
-
-                              {{-- Kolom AKSI --}}
                               <td class="text-center">
                                 @if ($pendingTransaction)
-                                  <a href="{{ route('checkout', $pendingTransaction->id) }}" 
+                                  <a href="{{ route('checkout', $pendingTransaction->id) }}"
                                     class="btn btn-warning text-center btn-sm">
                                     <i class="mdi mdi-clock-outline align-middle"></i> Lanjutkan Pembayaran
                                   </a>
