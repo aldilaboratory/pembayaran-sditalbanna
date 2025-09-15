@@ -96,53 +96,90 @@ class DataTagihanSiswaAdminController extends Controller
         return view('admin.data_tagihan_siswa.index', compact('student'));
     }
 
-    public function create() {
-        $studentClasses = StudentClass::all()->sortBy('class');
-        $academicYears = AcademicYear::all()->sortBy('academic_year');
-        
-        return view('admin.data_tagihan_siswa.create', compact('studentClasses', 'academicYears'));
+    public function create(Request $request)
+    {
+        $studentClasses = StudentClass::orderBy('class')->get(['id','class']);
+        $academicYears  = AcademicYear::orderByRaw('CAST(LEFT(academic_year,4) AS UNSIGNED) DESC')->get(['id','academic_year']);
+
+        $selectedClassId = $request->query('class_id'); // filter dari query
+        $students = collect();
+
+        if ($selectedClassId) {
+            $students = Student::where('class_id', $selectedClassId)
+                ->where('status', 'aktif')
+                ->orderBy('nama')
+                ->get(['id','nis','nama']);
+        }
+
+        return view('admin.data_tagihan_siswa.create', compact(
+            'studentClasses','academicYears','selectedClassId','students'
+        ));
     }
 
-    public function store(StoreSchoolFeesRequest $request) {
+    public function students(Request $request)
+    {
+        $validated = $request->validate([
+            'class_id' => ['required','exists:student_classes,id'],
+        ]);
+
+        $students = Student::where('class_id', $validated['class_id'])
+            ->where('status','aktif')
+            ->orderBy('nama')
+            ->get(['id','nis','nama']);
+
+        return response()->json([
+            'count'    => $students->count(),
+            'students' => $students, // array of {id, nis, nama}
+        ]);
+    }
+
+    public function store(StoreSchoolFeesRequest $request)
+    {
         try {
             DB::beginTransaction();
-            
-            // Ambil semua siswa di kelas yang dipilih
-            $students = Student::where('class_id', $request->class_id)
-                              ->where('academic_year_id', $request->tahun_ajaran)
-                              ->where('status', 'aktif') // Hanya siswa aktif
-                              ->get();
-            
-            if ($students->isEmpty()) {
-                return back()->with('error', 'Tidak ada siswa aktif di kelas yang dipilih.');
+
+            // Ambil array siswa terpilih
+            $studentIds = $request->input('student_ids', []);
+            if (empty($studentIds)) {
+                return back()->with('error', 'Pilih minimal satu siswa.')->withInput();
             }
-            
-            foreach ($students as $student) {
-                // Buat tagihan baru
-                SchoolFee::firstOrCreate([
-                    'student_id' => $student->id,
-                    'academic_year_id' => $request->tahun_ajaran,
-                    'bulan' => $request->bulan,
-                    'jenis_tagihan' => $request->jenis_tagihan,
-                    'jumlah' => $request->jumlah,
-                    'sisa' => $request->jumlah, // Sisa sama dengan jumlah saat di awal
-                    'jatuh_tempo' => $request->jatuh_tempo,
-                    'status' => 'belum_lunas',
-                ]);
+
+            $created = 0; $skipped = 0;
+
+            foreach ($studentIds as $sid) {
+                // Hanya siswa aktif (hardening)
+                $isActive = \App\Models\Student::where('id',$sid)
+                            ->where('status','aktif')->exists();
+                if (!$isActive) { $skipped++; continue; }
+
+                // Kunci unik
+                $attrs = [
+                    'student_id'        => (int) $sid,
+                    'academic_year_id'  => (int) $request->tahun_ajaran,
+                    'bulan'             => (int) $request->bulan,
+                    'jenis_tagihan'     => (string) $request->jenis_tagihan,
+                ];
+
+                // Nilai jika belum ada
+                $vals = [
+                    'jumlah'        => (int) $request->jumlah,
+                    'sisa'          => (int) $request->jumlah,
+                    'jatuh_tempo'   => $request->jatuh_tempo,
+                    'status'        => 'belum_lunas',
+                ];
+
+                $fee = SchoolFee::firstOrCreate($attrs, $vals);
+                if ($fee->wasRecentlyCreated) $created++; else $skipped++;
             }
-            
+
             DB::commit();
-            $count = $students->count();
+
             return redirect()
-                ->route('admin.data_tagihan_siswa.create')
-                ->with('success', "Berhasil membuat tagihan untuk {$count} siswa aktif.");
-
-        } catch (\Exception $e) {
+                ->route('admin.data_tagihan_siswa.create', ['class_id' => $request->class_id])
+                ->with('success', "Tagihan dibuat: {$created}");
+        } catch (\Throwable $e) {
             DB::rollBack();
-
-            return back()
-                ->with('error', 'Gagal membuat tagihan: ' . $e->getMessage())
-                ->withInput();
+            return back()->with('error', 'Gagal membuat tagihan: '.$e->getMessage())->withInput();
         }
     }
 

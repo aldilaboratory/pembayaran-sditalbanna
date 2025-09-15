@@ -37,7 +37,7 @@
                               #
                             </th>
                             <th class="text-center">
-                              <span class="fw-bold">NIK</span>
+                              <span class="fw-bold">NIS</span>
                             </th>
                             <th class="text-center">
                               <span class="fw-bold">Nama Siswa</span>
@@ -66,7 +66,7 @@
                               {{ $loop->iteration }}
                             </td>
                             <td>
-                              {{ $r['nik'] }}
+                              {{ $r['nis'] }}
                             </td>
                             <td>
                               {{ $r['nama'] }}

@@ -54,7 +54,7 @@ class LaporanTunggakanSiswaController extends Controller
 
             $row = [
                 'no'   => $i + 1,
-                'nik'  => $s->nik,
+                'nis'  => $s->nis,
                 'nama' => $s->nama,
             ];
 

@@ -76,7 +76,7 @@
 
             <div class="row">
               <div class="col-md-12">
-                <a href="{{ route('admin.data_tagihan_siswa.create') }}" class="btn btn-primary mb-3">+ Input Tagihan Siswa Sekaligus</a>
+                <a href="{{ route('admin.data_tagihan_siswa.create') }}" class="btn btn-primary mb-3">+ Input Tagihan Siswa</a>
               </div>
             </div>
             <div class="row">
@@ -160,7 +160,6 @@
                 <div class="card rounded">
                   <div class="card-body">
                     <h4 class="card-title">Data Tagihan</h4>
-                    <button class="btn btn-primary mb-3">+ Siswa Ingin Membayar Secara Offline</button>
                     <div class="table-responsive">
                       <table class="table table-bordered" id="dataTable">
                         <thead>

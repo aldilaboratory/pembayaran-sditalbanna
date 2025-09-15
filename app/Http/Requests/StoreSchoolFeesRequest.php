@@ -22,12 +22,14 @@ class StoreSchoolFeesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'class_id' => 'required|exists:student_classes,id',
-            'tahun_ajaran' => 'required|exists:academic_years,id',
-            'bulan' => 'required|integer|between:1,12',
-            'jenis_tagihan' => 'required|string|in:spp,daftar_ulang,biaya_pengembangan,biaya_operasional',
-            'jumlah' => 'required|numeric|min:0',
-            'jatuh_tempo' => 'required|date',
+            'class_id'       => ['required','exists:student_classes,id'],
+            'tahun_ajaran'   => ['required','exists:academic_years,id'],
+            'jenis_tagihan'  => ['required','in:spp,daftar_ulang,biaya_pengembangan,biaya_operasional'],
+            'jumlah'         => ['required','integer','min:0'],
+            'bulan'          => ['required','integer','between:1,12'],
+            'jatuh_tempo'    => ['required','date'],
+            'student_ids'    => ['required','array','min:1'],
+            'student_ids.*'  => ['integer','exists:students,id'],
         ];
     }
 
@@ -45,6 +47,8 @@ class StoreSchoolFeesRequest extends FormRequest
             'jumlah.min' => 'Jumlah tagihan tidak boleh negatif',
             'jatuh_tempo.required' => 'Tanggal jatuh tempo wajib diisi',
             'jatuh_tempo.date' => 'Format tanggal jatuh tempo tidak valid',
+            'student_ids.required' => 'Pilih minimal satu siswa.',
+            'student_ids.min'      => 'Pilih minimal satu siswa.',
         ];
     }
 }
