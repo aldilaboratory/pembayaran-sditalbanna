@@ -263,6 +263,13 @@
                                       data-bulan="{{ $fee->nama_bulan }}">
                                       <i class="mdi mdi-square-edit-outline align-middle"></i> Edit
                                     </a>
+
+                                    <a href="javascript:void(0)"
+                                      class="btn btn-danger btn-sm js-delete-fee ms-1"
+                                      data-url="{{ route('admin.data_tagihan_siswa.destroy', $fee) }}"
+                                      data-label="{{ $student->nama }} – {{ $fee->jenis_tagihan_label }} ({{ $fee->nama_bulan }})">
+                                      <i class="mdi mdi-delete align-middle"></i> Hapus
+                                    </a>
                                   @endif
                                 </td>
                               </tr>
@@ -588,6 +595,52 @@
             } else {
               window.location.reload();
             }
+          }
+        });
+      });
+    });
+    </script>
+
+    {{-- JS Hapus --}}
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+      document.querySelectorAll('.js-delete-fee').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.preventDefault();
+
+          const url   = btn.dataset.url;
+          const label = btn.dataset.label || 'tagihan ini';
+
+          const ask = await Swal.fire({
+            icon: 'warning',
+            title: 'Hapus Tagihan?',
+            html: `Anda akan menghapus <b>${label}</b>.<br>Data transaksi non-sukses yang terkait akan dibersihkan.`,
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus',
+            cancelButtonText: 'Batal'
+          });
+          if (!ask.isConfirmed) return;
+
+          try {
+            const resp = await fetch(url, {
+              method: 'DELETE',
+              headers: {
+                'X-CSRF-TOKEN': csrf,
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+              },
+              credentials: 'same-origin'
+            });
+            const data = await resp.json().catch(()=>({}));
+            if (!resp.ok || data.ok === false) {
+              throw new Error(data.message || `HTTP ${resp.status}`);
+            }
+            await Swal.fire({icon:'success',title:'Berhasil',text:'Tagihan dihapus.',timer:1200,showConfirmButton:false});
+            window.location.reload();
+          } catch (err) {
+            Swal.fire({icon:'error',title:'Gagal',text: err.message || 'Gagal menghapus.'});
           }
         });
       });

@@ -238,4 +238,36 @@ class DataTagihanSiswaAdminController extends Controller
             return response()->json(['ok'=>false,'message'=>'Terjadi kesalahan server.'], 500);
         }
     }
+
+    public function destroy(Request $request, SchoolFee $fee)
+    {
+        // Larangan: sudah lunas → tak boleh dihapus
+        if ($fee->status === 'lunas') {
+            return $request->expectsJson()
+                ? response()->json(['ok'=>false,'message'=>'Tidak bisa menghapus tagihan yang sudah lunas.'], 422)
+                : back()->with('error','Tidak bisa menghapus tagihan yang sudah lunas.');
+        }
+
+        // Jika sudah ada transaksi sukses → tak boleh dihapus
+        $hasSuccessTx = Transaction::where('school_fee_id', $fee->id)
+                            ->where('status','success')->exists();
+        if ($hasSuccessTx) {
+            return $request->expectsJson()
+                ? response()->json(['ok'=>false,'message'=>'Tagihan punya transaksi sukses.'], 422)
+                : back()->with('error','Tagihan punya transaksi sukses.');
+        }
+
+        DB::transaction(function () use ($fee) {
+            // Bersihkan transaksi non-sukses (pending/expired/failed/canceled)
+            Transaction::where('school_fee_id', $fee->id)
+                ->whereIn('status', ['pending','expired','failed','canceled'])
+                ->delete();
+
+            $fee->delete();
+        });
+
+        return $request->expectsJson()
+            ? response()->json(['ok'=>true])
+            : back()->with('success','Tagihan berhasil dihapus.');
+    }
 }
