@@ -12,6 +12,7 @@ use App\Models\StudentClass;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 
@@ -119,22 +120,21 @@ class DataTagihanSiswaAdminController extends Controller
     public function students(Request $request)
     {
         try {
-            $request->validate([
+            $validated = $request->validate([
                 'class_id' => ['required','exists:student_classes,id'],
             ]);
 
             $q = Student::query()
                 ->select('id','nis','nama')
-                ->where('class_id', (int)$request->class_id)
+                ->where('class_id', (int)$validated['class_id'])
                 ->orderBy('nama');
 
-            // Di beberapa DB Anda mungkin tidak punya kolom `status` atau nilainya “Aktif/aktif/1”
-            if (Schema::hasColumn('students','status')) {
+            // filter hanya jika kolom 'status' memang ada di DB production
+            if (Schema::hasColumn('students', 'status')) {
                 $q->where(function ($w) {
-                    // cocokkan case-insensitive dan juga kemungkinan angka/boolean
-                    $w->whereRaw('LOWER(status) = ?', ['aktif'])
-                    ->orWhereRaw('LOWER(status) = ?', ['active'])
-                    ->orWhereIn('status', [1, '1', true]);
+                    $w->whereRaw('LOWER(status)=?', ['aktif'])
+                    ->orWhereRaw('LOWER(status)=?', ['active'])
+                    ->orWhereIn('status', [1,'1',true]);
                 });
             }
 
@@ -144,12 +144,9 @@ class DataTagihanSiswaAdminController extends Controller
                 'count'    => $students->count(),
                 'students' => $students,
             ]);
-
         } catch (\Throwable $e) {
-            Log::error('students endpoint error: '.$e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return response()->json([
-                'message' => 'Server error on students endpoint',
-            ], 500);
+            Log::error('students endpoint error: '.$e->getMessage());
+            return response()->json(['message'=>'Server error on students endpoint'], 500);
         }
     }
 
