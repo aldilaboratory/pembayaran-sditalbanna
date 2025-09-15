@@ -55,8 +55,21 @@
                 <p>Rp{{ number_format($transaction->jumlah ?? $transaction->schoolFee?->jumlah ?? 0, 0, ',', '.') }}</p>
 
                 </div>
-            </div>
 
+                
+            </div>
+            <hr class="my-4">
+
+                <h5 class="mb-3">Bukti Pembayaran</h5>
+                @php($url = $transaction->payment_proof_url)
+                @if($url)
+                <a href="{{ $url }}" target="_blank" class="d-inline-block">
+                    <img src="{{ $url }}" alt="Bukti Pembayaran" class="img-thumbnail"
+                        style="max-height: 320px; object-fit: contain;">
+                </a>
+                @else
+                <p class="text-muted mb-0">Tidak ada bukti pembayaran yang diunggah.</p>
+                @endif
         </div>
       </div>
 </x-admin.layout>

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class Transaction extends Model
 {
@@ -51,6 +52,27 @@ class Transaction extends Model
         $date = ($this->created_at ?? now())->timezone('Asia/Makassar')->format('Ym'); // 202409
         $id   = str_pad((string) $this->id, 6, '0', STR_PAD_LEFT); // 000123
         return "INV-{$date}-{$id}";
+    }
+
+    public function getPaymentProofUrlAttribute(): ?string
+    {
+        $p = $this->payment_proof_path;
+        if (!$p) return null;
+
+        // Jika sudah URL penuh
+        if (preg_match('~^https?://~', $p)) return $p;
+
+        // Jika disimpan di disk "public" (storage/app/public)
+        if (Storage::disk('public')->exists($p)) {
+            return Storage::disk('public')->url($p); // -> /storage/...
+        }
+
+        // Jika file sudah berada di public/ langsung
+        if (file_exists(public_path($p))) {
+            return asset($p);
+        }
+
+        return null;
     }
 
 }

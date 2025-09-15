@@ -530,7 +530,7 @@
                 </div>
 
                 <div class="mb-2"><strong>Catatan (opsional):</strong>
-                  <input id="swal-note" type="text" class="swal2-input" placeholder="mis. bayar tunai di TU" style="width:100%">
+                  <input id="swal-note" type="text" class="swal2-input m-0" placeholder="mis. bayar tunai di TU" style="width:100%">
                 </div>
               </div>
             `,
