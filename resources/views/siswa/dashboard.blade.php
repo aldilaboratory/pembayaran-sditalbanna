@@ -43,7 +43,7 @@
                       </tr>
                       <tr>
                         <td>Tagihan</td>
-                        <td><span class="fw-bold">Rp6.000.000</span></td>
+                        <td><span class="fw-bold">Rp{{ number_format($totalTagihan, 0, ',', '.') }}</span></td>
                       </tr>
                     </table>
                   </div>

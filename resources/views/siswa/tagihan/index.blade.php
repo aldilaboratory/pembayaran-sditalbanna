@@ -1,4 +1,35 @@
 <x-siswa.layout title="Tagihan Siswa">
+            {{-- Total Tagihan Belum Lunas --}}
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <div class="card rounded bg-warning">
+                  <div class="card-body">
+                    <h4 class="card-title text-white">
+                      <i class="mdi mdi-currency-usd"></i> Total Tagihan Belum Lunas
+                    </h4>
+                    @php
+                      $totalBelumLunas = $tagihanSiswa->where('status', '!=', 'lunas')->sum('jumlah');
+                      $jumlahTagihanBelumLunas = $tagihanSiswa->where('status', '!=', 'lunas')->count();
+                    @endphp
+                    <div class="row">
+                      <div class="col-md-6">
+                        <h2 class="text-white mb-0">
+                          Rp{{ number_format($totalBelumLunas, 0, ',', '.') }}
+                        </h2>
+                        <p class="text-white-50 mb-0">Total Nominal</p>
+                      </div>
+                      <div class="col-md-6">
+                        <h2 class="text-white mb-0">
+                          {{ $jumlahTagihanBelumLunas }}
+                        </h2>
+                        <p class="text-white-50 mb-0">Jumlah Tagihan</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="row">
               <div class="col-md-12">
                 <div class="card rounded">

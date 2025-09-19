@@ -16,6 +16,7 @@ class DashboardController extends Controller
             'student.studentClass',
             'student.schoolYear',
             'student.academicYear',
+            'student.schoolFee'
         ])->find(Auth::id());
 
         // Cek apakah data student ada
@@ -25,6 +26,9 @@ class DashboardController extends Controller
                 ->with('warning', 'Data siswa belum lengkap. Silakan hubungi admin.');
         }
 
-        return view('siswa.dashboard', compact('user'));
+        // Hitung total tagihan yang belum lunas
+        $totalTagihan = $user->student->schoolFee->where('status', '!=', 'lunas')->sum('jumlah');
+
+        return view('siswa.dashboard', compact('user', 'totalTagihan'));
     }
 }
