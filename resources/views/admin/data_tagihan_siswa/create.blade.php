@@ -158,66 +158,116 @@
        }
 
        // Event listener untuk form submission
-       document.getElementById('feeForm').addEventListener('submit', function(e) {
-         if (!validateForm()) {
-           e.preventDefault();
+        document.getElementById('feeForm').addEventListener('submit', function(e) {
+          if (!validateForm()) {
+            e.preventDefault();
+            return false;
+          }
+        });
+
+        // Event listener untuk pengecekan duplikasi real-time
+        document.querySelector('select[name="jenis_tagihan"]')?.addEventListener('change', checkDuplicateTagihan);
+        document.querySelector('select[name="bulan"]')?.addEventListener('change', checkDuplicateTagihan);
+        document.querySelector('select[name="tahun_ajaran"]')?.addEventListener('change', checkDuplicateTagihan);
+        
+        // Event listener untuk checkbox siswa
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('student-check')) {
+                checkDuplicateTagihan();
+            }
+        });
+      });
+
+      // Fungsi untuk mengecek duplikasi tagihan
+       async function checkDuplicateTagihan() {
+         const jenisTagihan = document.querySelector('select[name="jenis_tagihan"]').value;
+         const bulan = document.querySelector('select[name="bulan"]').value;
+         const tahunAjaran = document.querySelector('select[name="tahun_ajaran"]').value;
+         const checkedStudents = document.querySelectorAll('.student-check:checked');
+
+         if (!jenisTagihan || !bulan || !tahunAjaran || checkedStudents.length === 0) {
+           return; // Skip jika data tidak lengkap
+         }
+
+         const studentIds = Array.from(checkedStudents).map(cb => cb.value);
+
+         try {
+           const response = await fetch('{{ route("admin.data_tagihan_siswa.check_duplicate") }}', {
+             method: 'POST',
+             headers: {
+               'Content-Type': 'application/json',
+               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+             },
+             body: JSON.stringify({
+               jenis_tagihan: jenisTagihan,
+               bulan: bulan,
+               academic_year_id: tahunAjaran,
+               student_ids: studentIds
+             })
+           });
+
+           const data = await response.json();
+           
+           if (data.duplicate) {
+             alert(data.message);
+           }
+         } catch (error) {
+           console.error('Error checking duplicate:', error);
+         }
+       }
+
+       // Fungsi validasi form sebelum submit
+       function validateForm() {
+         // Validasi kelas
+         if (!classHidden.value) {
+           alert('Error: Silakan pilih kelas terlebih dahulu!');
            return false;
          }
-       });
-     });
 
-      // Fungsi validasi form sebelum submit
-      function validateForm() {
-        // Validasi kelas
-        if (!classHidden.value) {
-          alert('Error: Silakan pilih kelas terlebih dahulu!');
-          return false;
-        }
+         // Validasi jenis tagihan
+         const jenisTagihan = document.querySelector('select[name="jenis_tagihan"]').value;
+         if (!jenisTagihan) {
+           alert('Error: Silakan pilih jenis tagihan!');
+           return false;
+         }
 
-        // Validasi jenis tagihan
-        const jenisTagihan = document.querySelector('select[name="jenis_tagihan"]').value;
-        if (!jenisTagihan) {
-          alert('Error: Silakan pilih jenis tagihan!');
-          return false;
-        }
+         // Validasi jumlah tagihan
+         const jumlah = document.querySelector('input[name="jumlah"]').value;
+         if (!jumlah || jumlah <= 0) {
+           alert('Error: Jumlah tagihan harus lebih dari 0!');
+           return false;
+         }
 
-        // Validasi jumlah tagihan
-        const jumlah = document.querySelector('input[name="jumlah"]').value;
-        if (!jumlah || jumlah <= 0) {
-          alert('Error: Jumlah tagihan harus lebih dari 0!');
-          return false;
-        }
+         // Validasi bulan
+         const bulan = document.querySelector('select[name="bulan"]').value;
+         if (!bulan) {
+           alert('Error: Silakan pilih bulan!');
+           return false;
+         }
 
-        // Validasi bulan
-        const bulan = document.querySelector('select[name="bulan"]').value;
-        if (!bulan) {
-          alert('Error: Silakan pilih bulan!');
-          return false;
-        }
+         // Validasi tahun ajaran
+         const tahunAjaran = document.querySelector('select[name="tahun_ajaran"]').value;
+         if (!tahunAjaran) {
+           alert('Error: Silakan pilih tahun ajaran!');
+           return false;
+         }
 
-        // Validasi tahun ajaran
-        const tahunAjaran = document.querySelector('select[name="tahun_ajaran"]').value;
-        if (!tahunAjaran) {
-          alert('Error: Silakan pilih tahun ajaran!');
-          return false;
-        }
+         // Validasi jatuh tempo
+         const jatuhTempo = document.querySelector('input[name="jatuh_tempo"]').value;
+         if (!jatuhTempo) {
+           alert('Error: Silakan isi tanggal jatuh tempo!');
+           return false;
+         }
 
-        // Validasi jatuh tempo
-        const jatuhTempo = document.querySelector('input[name="jatuh_tempo"]').value;
-        if (!jatuhTempo) {
-          alert('Error: Silakan isi tanggal jatuh tempo!');
-          return false;
-        }
+         // Validasi siswa yang dipilih
+         const checkedStudents = document.querySelectorAll('.student-check:checked');
+         if (checkedStudents.length === 0) {
+           alert('Error: Silakan pilih minimal satu siswa!');
+           return false;
+         }
 
-        // Validasi siswa yang dipilih
-        const checkedStudents = document.querySelectorAll('.student-check:checked');
-        if (checkedStudents.length === 0) {
-          alert('Error: Silakan pilih minimal satu siswa!');
-          return false;
-        }
-
-        return true;
-      }
+         return true;
+       }
 
       function updateSubmitState() {
         const anyChecked = !!document.querySelector('.student-check:checked');

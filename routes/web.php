@@ -136,6 +136,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::get('/data_tagihan_siswa', [DataTagihanSiswaAdminController::class, 'index'])->name('admin.data_tagihan_siswa');
     Route::get('/data_tagihan_siswa/create', [DataTagihanSiswaAdminController::class, 'create'])->name('admin.data_tagihan_siswa.create');
     Route::post('/data_tagihan_siswa/store', [DataTagihanSiswaAdminController::class, 'store'])->name('admin.data_tagihan_siswa.store');
+    Route::post('/data_tagihan_siswa/check_duplicate', [DataTagihanSiswaAdminController::class, 'checkDuplicate'])->name('admin.data_tagihan_siswa.check_duplicate');
     Route::get('/data_tagihan_siswa/autocomplete', [DataTagihanSiswaAdminController::class, 'autocomplete'])->name('admin.data_tagihan_siswa.autocomplete');
     Route::post('/data_tagihan_siswa', [DataTagihanSiswaAdminController::class, 'searchById'])->name('admin.data_tagihan_siswa.search.byId');
     Route::post('/data_tagihan_siswa/search', [DataTagihanSiswaAdminController::class, 'search'])->name('admin.data_tagihan_siswa.search');

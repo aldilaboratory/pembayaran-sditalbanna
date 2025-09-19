@@ -150,6 +150,41 @@ class DataTagihanSiswaAdminController extends Controller
         }
     }
 
+    public function checkDuplicate(Request $request)
+    {
+        $request->validate([
+            'academic_year_id' => 'required|exists:academic_years,id',
+            'jenis_tagihan' => 'required|string',
+            'bulan' => 'required|string',
+            'student_ids' => 'required|array',
+            'student_ids.*' => 'exists:students,id'
+        ]);
+
+        $duplicates = [];
+        
+        foreach ($request->student_ids as $studentId) {
+            $exists = SchoolFee::where('academic_year_id', $request->academic_year_id)
+                ->where('jenis_tagihan', $request->jenis_tagihan)
+                ->where('bulan', $request->bulan)
+                ->where('student_id', $studentId)
+                ->exists();
+
+            if ($exists) {
+                $student = Student::find($studentId);
+                $duplicates[] = $student->nama;
+            }
+        }
+
+        if (!empty($duplicates)) {
+            return response()->json([
+                'duplicate' => true,
+                'message' => 'Tagihan sudah ada untuk siswa: ' . implode(', ', $duplicates)
+            ]);
+        }
+
+        return response()->json(['duplicate' => false]);
+    }
+
     public function store(StoreSchoolFeesRequest $request)
     {
         try {
