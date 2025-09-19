@@ -30,42 +30,57 @@
                         </thead>
                         <tbody>
                           @foreach ($transactions as $transaction)
-                            @if ($transaction->status === 'success')
-                              <tr>
-                                <td class="text-center">
-                                  {{ $loop->iteration }}
-                                </td>
-                                <td>
-                                  {{ $transaction->paid_at }}
-                                </td>
-                                <td>
-                                  {{ $transaction->invoice_code }}
-                                </td>
-                                <td class="text-end">
-                                  Rp{{ number_format($transaction->jumlah) }}
-                                </td>
-                                <td class="text-center">
-                                  @if ($transaction['status'] == 'pending')
-                                    <span class="badge bg-warning">Pending</span>
-                                  @elseif ($transaction['status'] == 'success')
-                                    <span class="badge bg-success">Success</span>
-                                  @elseif ($transaction['status'] == 'expired')
-                                    <span class="badge bg-secondary">Expired</span>
-                                  @elseif ($transaction['status'] == 'failed')
-                                    <span class="badge bg-danger">Failed</span>
-                                  @elseif ($transaction['status'] == 'canceled')
-                                    <span class="badge bg-dark">Canceled</span>
-                                  @endif
-                                </td>
-                                <td class="text-center">
-                                  {{-- Detail transaksi (selalu bisa diklik, authorization dijaga di controller show) --}}
+                            <tr>
+                              <td class="text-center">
+                                {{ $loop->iteration }}
+                              </td>
+                              <td>
+                                @if ($transaction->status === 'success')
+                                  {{ $transaction->paid_at ? \Carbon\Carbon::parse($transaction->paid_at)->format('d/m/Y H:i') : '-' }}
+                                @else
+                                  {{ $transaction->created_at ? \Carbon\Carbon::parse($transaction->created_at)->format('d/m/Y H:i') : '-' }}
+                                @endif
+                              </td>
+                              <td>
+                                {{ $transaction->invoice_code }}
+                              </td>
+                              <td class="text-end">
+                                Rp{{ number_format($transaction->jumlah) }}
+                              </td>
+                              <td class="text-center">
+                                @if ($transaction->status == 'pending')
+                                  <span class="badge bg-warning">Pending</span>
+                                @elseif ($transaction->status == 'success')
+                                  <span class="badge bg-success">Success</span>
+                                @elseif ($transaction->status == 'expired')
+                                  <span class="badge bg-secondary">Expired</span>
+                                @elseif ($transaction->status == 'failed')
+                                  <span class="badge bg-danger">Failed</span>
+                                @elseif ($transaction->status == 'canceled')
+                                  <span class="badge bg-dark">Canceled</span>
+                                @else
+                                  <span class="badge bg-light text-dark">{{ ucfirst($transaction->status) }}</span>
+                                @endif
+                              </td>
+                              <td class="text-center">
+                                @if ($transaction->status === 'success')
+                                  {{-- Detail transaksi untuk transaksi success --}}
                                   <a href="{{ route('siswa.transaksi.show', $transaction) }}"
                                     class="btn btn-light text-center btn-sm">
                                     <i class="mdi mdi-history align-middle"></i> Detail Transaksi
                                   </a>
-                                </td>
-                              </tr>
-                            @endif
+                                @elseif ($transaction->status === 'pending')
+                                  {{-- Tombol lanjutkan pembayaran untuk transaksi pending --}}
+                                  <a href="{{ route('checkout', $transaction) }}"
+                                    class="btn btn-warning text-center btn-sm">
+                                    <i class="mdi mdi-clock-outline align-middle"></i> Lanjutkan Pembayaran
+                                  </a>
+                                @else
+                                  {{-- Tampilkan '-' untuk transaksi selain success dan pending --}}
+                                  <span class="text-muted">-</span>
+                                @endif
+                              </td>
+                            </tr>
                           @endforeach
                         </tbody>
                       </table>
