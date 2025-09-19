@@ -161,6 +161,12 @@ class DataTagihanSiswaAdminController extends Controller
                 return back()->with('error', 'Pilih minimal satu siswa.')->withInput();
             }
 
+            // Pengecekan khusus untuk jumlah tagihan = 0
+            $jumlah = (int) $request->input('jumlah', 0);
+            if ($jumlah === 0) {
+                return back()->with('error', 'Gagal menambah data tagihan. Jumlah tagihan tidak boleh 0.')->withInput();
+            }
+
             $created = 0; $skipped = 0;
 
             foreach ($studentIds as $sid) {
@@ -247,7 +253,7 @@ class DataTagihanSiswaAdminController extends Controller
             return response()->json([
                 'ok'           => true,
                 'message'      => 'Tagihan ditandai lunas dan transaksi dibuat.',
-                'download_url' => $result['download_url'],
+                // 'download_url' => $result['download_url'],
                 'invoice_code' => $result['invoice_code'],
             ]);
         } catch (\Throwable $e) {

@@ -5,6 +5,21 @@
         <div class="card-body">
           <h4 class="card-title">Tambah Data Tagihan Siswa</h4>
 
+          {{-- Alert untuk menampilkan error --}}
+          @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Error!</strong> {{ session('error') }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          @endif
+
+          @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong>Berhasil!</strong> {{ session('success') }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          @endif
+
           {{-- FORM simpan tagihan --}}
           <form action="{{ route('admin.data_tagihan_siswa.store') }}" method="POST" id="feeForm">
             @csrf
@@ -12,13 +27,13 @@
             {{-- pilih kelas (tanpa submit) --}}
             <div class="mb-3">
               <label for="class_id_select" class="form-label">Kelas</label>
-              <select id="class_id_select" class="form-select text-dark">
+              <select id="class_id_select" class="form-select text-dark @error('class_id') is-invalid @enderror">
                 <option value="" selected disabled>Pilih Kelas</option>
                 @foreach ($studentClasses as $class)
-                  <option value="{{ $class->id }}">{{ $class->class }}</option>
+                  <option value="{{ $class->id }}" {{ old('class_id') == $class->id ? 'selected' : '' }}>{{ $class->class }}</option>
                 @endforeach
               </select>
-              <input type="hidden" name="class_id" id="class_id_hidden">
+              <input type="hidden" name="class_id" id="class_id_hidden" value="{{ old('class_id') }}">
               <small class="text-muted" id="studentCountText"></small>
               @error('class_id') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
             </div>
@@ -120,10 +135,94 @@
     const submitBtn     = document.getElementById('submitBtn');
     const countText     = document.getElementById('studentCountText');
 
-    function updateSubmitState() {
-      const anyChecked = !!document.querySelector('.student-check:checked');
-      submitBtn.disabled = !anyChecked;
+    // Function untuk menampilkan alert error
+    function showFieldError(fieldName, message) {
+      alert(`Error pada field ${fieldName}: ${message}`);
     }
+
+    // Cek dan tampilkan error untuk setiap field saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+      @if($errors->any())
+        @foreach($errors->all() as $error)
+          alert('{{ $error }}');
+        @endforeach
+      @endif
+
+      // Restore kelas yang dipilih jika ada error
+       const selectedClassId = '{{ old('class_id') }}';
+       if (selectedClassId) {
+         classSelect.value = selectedClassId;
+         classHidden.value = selectedClassId;
+         // Trigger change event untuk memuat siswa
+         classSelect.dispatchEvent(new Event('change'));
+       }
+
+       // Event listener untuk form submission
+       document.getElementById('feeForm').addEventListener('submit', function(e) {
+         if (!validateForm()) {
+           e.preventDefault();
+           return false;
+         }
+       });
+     });
+
+      // Fungsi validasi form sebelum submit
+      function validateForm() {
+        // Validasi kelas
+        if (!classHidden.value) {
+          alert('Error: Silakan pilih kelas terlebih dahulu!');
+          return false;
+        }
+
+        // Validasi jenis tagihan
+        const jenisTagihan = document.querySelector('select[name="jenis_tagihan"]').value;
+        if (!jenisTagihan) {
+          alert('Error: Silakan pilih jenis tagihan!');
+          return false;
+        }
+
+        // Validasi jumlah tagihan
+        const jumlah = document.querySelector('input[name="jumlah"]').value;
+        if (!jumlah || jumlah <= 0) {
+          alert('Error: Jumlah tagihan harus lebih dari 0!');
+          return false;
+        }
+
+        // Validasi bulan
+        const bulan = document.querySelector('select[name="bulan"]').value;
+        if (!bulan) {
+          alert('Error: Silakan pilih bulan!');
+          return false;
+        }
+
+        // Validasi tahun ajaran
+        const tahunAjaran = document.querySelector('select[name="tahun_ajaran"]').value;
+        if (!tahunAjaran) {
+          alert('Error: Silakan pilih tahun ajaran!');
+          return false;
+        }
+
+        // Validasi jatuh tempo
+        const jatuhTempo = document.querySelector('input[name="jatuh_tempo"]').value;
+        if (!jatuhTempo) {
+          alert('Error: Silakan isi tanggal jatuh tempo!');
+          return false;
+        }
+
+        // Validasi siswa yang dipilih
+        const checkedStudents = document.querySelectorAll('.student-check:checked');
+        if (checkedStudents.length === 0) {
+          alert('Error: Silakan pilih minimal satu siswa!');
+          return false;
+        }
+
+        return true;
+      }
+
+      function updateSubmitState() {
+        const anyChecked = !!document.querySelector('.student-check:checked');
+        submitBtn.disabled = !anyChecked;
+      }
 
     checkAll?.addEventListener('change', () => {
       document.querySelectorAll('.student-check').forEach(cb => cb.checked = checkAll.checked);
