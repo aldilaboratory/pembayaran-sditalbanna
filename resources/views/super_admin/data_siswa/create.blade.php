@@ -1,4 +1,4 @@
-<x-admin.layout>
+<x-super_admin.layout>
             <div class="row">
               <div class="col-md-12">
                 {{-- Error Messages --}}
@@ -14,7 +14,7 @@
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Tambah Data Siswa</h4>
-                    <form action="{{ route('admin.data_siswa.store') }}" method="POST">
+                    <form action="{{ route('super_admin.data_siswa.store') }}" method="POST">
                       @csrf
                       <div class="form-group">
                           <label for="name">Nama Siswa</label>
@@ -64,11 +64,11 @@
                                 <li>Password: siswa310136</li>
                             </ul>
                         </div>
-                      <a href="{{ route('admin.data_siswa') }}" class="btn btn-light">Kembali</a>
+                      <a href="{{ route('super_admin.data_siswa') }}" class="btn btn-light">Kembali</a>
                       <button type="submit" class="btn btn-primary mx-2">Simpan</button>
                     </form>
                   </div>
                 </div>
               </div>
             </div>
-</x-admin.layout>
+</x-super_admin.layout>

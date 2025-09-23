@@ -11,6 +11,18 @@ use App\Http\Controllers\Siswa\ProfilController;
 use App\Http\Controllers\Siswa\TagihanController;
 use App\Http\Controllers\Siswa\PembayaranController;
 
+// Route untuk Super Admin
+use App\Http\Controllers\Super_Admin\DashboardSuperAdminController;
+use App\Http\Controllers\Super_Admin\SA_DataSiswaAdminController;
+use App\Http\Controllers\Super_Admin\SA_LaporanTunggakanSiswaController;
+use App\Http\Controllers\Super_Admin\SA_LaporanPenerimaanController;
+use App\Http\Controllers\Super_Admin\SA_DataTagihanSiswaAdminController;
+use App\Http\Controllers\Super_Admin\SA_DataKelasController;
+use App\Http\Controllers\Super_Admin\SA_DataAngkatanController;
+use App\Http\Controllers\Super_Admin\SA_DataTahunAjaranController;
+use App\Http\Controllers\Super_Admin\SA_DataAdminController;
+use App\Http\Controllers\Super_Admin\SA_ProfilSiswaController;
+
 // Route untuk Admin
 use App\Http\Controllers\Admin\DashboardAdminController;
 use App\Http\Controllers\Admin\DataSiswaAdminController;
@@ -70,6 +82,8 @@ Route::get('/', function () {
     if (Auth::check()) {
         if (Auth::user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
+        } elseif (Auth::user()->isSuperAdmin()) {
+            return redirect()->route('super_admin.dashboard');
         } elseif (Auth::user()->isSiswa()) {
             return redirect()->route('siswa.dashboard');
         } elseif (Auth::user()->isKepalaSekolah()) {
@@ -79,7 +93,11 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Route untuk Siswa
+// ---------------------------
+//
+// {--- Route untuk Siswa ---}
+//
+// ---------------------------
 Route::middleware(['auth', 'siswa'])->prefix('siswa')->group(function() {
     Route::get('/', function () {
         return redirect()->route('siswa.dashboard');
@@ -113,7 +131,101 @@ Route::get('/midtrans/finish', [MidtransController::class, 'finish'])->name('mid
 Route::get('/midtrans/unfinish', [MidtransController::class, 'unfinish'])->name('midtrans.unfinish');
 Route::get('/midtrans/error', [MidtransController::class, 'error'])->name('midtrans.error');
 
-// Route untuk Admin
+
+// ---------------------------
+//
+// {--- Route untuk Super Admin ---}
+//
+// ---------------------------
+Route::middleware(['auth', 'super_admin'])->prefix('super_admin')->group(function() {
+    // Route untuk Dashboard
+    Route::get('/', function () {
+        return redirect()->route('super_admin.dashboard');
+    });
+    Route::get('/dashboard', [DashboardSuperAdminController::class, 'index'])->name('super_admin.dashboard');
+
+    // Route untuk Data Siswa
+    Route::get('/data_siswa', [SA_DataSiswaAdminController::class, 'index'])->name('super_admin.data_siswa');
+    Route::get('/data_siswa/create', [SA_DataSiswaAdminController::class, 'create'])->name('super_admin.data_siswa.create');
+    Route::get('/data_siswa/{id}/edit', [SA_DataSiswaAdminController::class, 'edit'])->name('super_admin.data_siswa.edit');
+    Route::put('/data_siswa/{id}', [SA_DataSiswaAdminController::class, 'update'])->name('super_admin.data_siswa.update');
+    Route::delete('/data_siswa/{id}', [SA_DataSiswaAdminController::class, 'destroy'])->name('super_admin.data_siswa.destroy');
+    Route::post('/data_siswa', [SA_DataSiswaAdminController::class, 'store'])->name('super_admin.data_siswa.store');
+
+    Route::get('/profil_siswa/{student}/edit', [SA_ProfilSiswaController::class, 'edit'])->name('super_admin.profil_siswa.edit');
+    Route::put('/profil_siswa/{student}', [SA_ProfilSiswaController::class, 'update'])->name('super_admin.profil_siswa.update');
+
+    // Route untuk Data Tagihan Siswa
+    Route::get('/data_tagihan_siswa', [SA_DataTagihanSiswaAdminController::class, 'index'])->name('super_admin.data_tagihan_siswa');
+    Route::get('/data_tagihan_siswa/create', [SA_DataTagihanSiswaAdminController::class, 'create'])->name('super_admin.data_tagihan_siswa.create');
+    Route::post('/data_tagihan_siswa/store', [SA_DataTagihanSiswaAdminController::class, 'store'])->name('super_admin.data_tagihan_siswa.store');
+    Route::post('/data_tagihan_siswa/check_duplicate', [SA_DataTagihanSiswaAdminController::class, 'checkDuplicate'])->name('super_admin.data_tagihan_siswa.check_duplicate');
+    Route::get('/data_tagihan_siswa/autocomplete', [SA_DataTagihanSiswaAdminController::class, 'autocomplete'])->name('super_admin.data_tagihan_siswa.autocomplete');
+    Route::post('/data_tagihan_siswa', [SA_DataTagihanSiswaAdminController::class, 'searchById'])->name('super_admin.data_tagihan_siswa.search.byId');
+    Route::post('/data_tagihan_siswa/search', [SA_DataTagihanSiswaAdminController::class, 'search'])->name('super_admin.data_tagihan_siswa.search');
+    Route::get('/data_tagihan_siswa/students', [SA_DataTagihanSiswaAdminController::class, 'students'])->name('super_admin.data_tagihan_siswa.students');
+    Route::delete('/data_tagihan_siswa/{fee}', [SA_DataTagihanSiswaAdminController::class,'destroy'])->name('super_admin.data_tagihan_siswa.destroy');
+
+    // Route untuk Laporan Tunggakan Siswa
+    Route::get('/laporan_tunggakan_siswa', [SA_LaporanTunggakanSiswaController::class, 'index'])->name('super_admin.laporan_tunggakan_siswa');
+    Route::get('/laporan-tunggakan-siswa/pdf',  [SA_LaporanTunggakanSiswaController::class, 'pdf'])->name('super_admin.laporan_tunggakan_siswa.pdf');
+    
+    // Route untuk Laporan Penerimaan
+    Route::get('/laporan_penerimaan', [SA_LaporanPenerimaanController::class, 'index'])->name('super_admin.laporan_penerimaan');
+    Route::get('laporan-penerimaan/pdf',  [SA_LaporanPenerimaanController::class,'pdf'])->name('super_admin.laporan_penerimaan.pdf');
+
+    // Route untuk Data Kelas
+    Route::get('/data_kelas', [SA_DataKelasController::class, 'index'])->name('super_admin.data_kelas');
+    Route::get('/data_kelas/create', [SA_DataKelasController::class, 'create'])->name('super_admin.data_kelas.create');
+    Route::get('/data_kelas/{id}/edit', [SA_DataKelasController::class, 'edit'])->name('super_admin.data_kelas.edit');
+    Route::put('/data_kelas/{id}', [SA_DataKelasController::class, 'update'])->name('super_admin.data_kelas.update');
+    Route::delete('/data_kelas/{id}', [SA_DataKelasController::class, 'destroy'])->name('super_admin.data_kelas.destroy');
+    Route::post('/data_kelas', [SA_DataKelasController::class, 'store'])->name('super_admin.data_kelas.store');
+    
+    // Route untuk Data Angkatan
+    Route::get('/data_angkatan', [SA_DataAngkatanController::class, 'index'])->name('super_admin.data_angkatan');
+    Route::get('/data_angkatan/create', [SA_DataAngkatanController::class, 'create'])->name('super_admin.data_angkatan.create');
+    Route::get('/data_angkatan/{id}/edit', [SA_DataAngkatanController::class, 'edit'])->name('super_admin.data_angkatan.edit');
+    Route::put('/data_angkatan/{id}', [SA_DataAngkatanController::class, 'update'])->name('super_admin.data_angkatan.update');
+    Route::delete('/data_angkatan/{id}', [SA_DataAngkatanController::class, 'destroy'])->name('super_admin.data_angkatan.destroy');
+    Route::post('/data_angkatan', [SA_DataAngkatanController::class, 'store'])->name('super_admin.data_angkatan.store');
+
+    // Route untuk Data Tahun Ajaran
+    Route::get('/data_tahun_ajaran', [SA_DataTahunAjaranController::class, 'index'])->name('super_admin.data_tahun_ajaran');
+    Route::get('/data_tahun_ajaran/create', [SA_DataTahunAjaranController::class, 'create'])->name('super_admin.data_tahun_ajaran.create');
+    Route::get('/data_tahun_ajaran/{id}/edit', [SA_DataTahunAjaranController::class, 'edit'])->name('super_admin.data_tahun_ajaran.edit');
+    Route::put('/data_tahun_ajaran/{id}', [SA_DataTahunAjaranController::class, 'update'])->name('super_admin.data_tahun_ajaran.update');
+    Route::delete('/data_tahun_ajaran/{id}', [SA_DataTahunAjaranController::class, 'destroy'])->name('super_admin.data_tahun_ajaran.destroy');
+    Route::post('/data_tahun_ajaran', [SA_DataTahunAjaranController::class, 'store'])->name('super_admin.data_tahun_ajaran.store');
+
+    // Route untuk Data Admin
+    Route::get('/data_admin', [SA_DataAdminController::class, 'index'])->name('super_admin.data_admin');
+    Route::get('/data_admin/create', [SA_DataAdminController::class, 'create'])->name('super_admin.data_admin.create');
+    Route::get('/data_admin/{id}/edit', [SA_DataAdminController::class, 'edit'])->name('super_admin.data_admin.edit');
+    Route::put('/data_admin/{id}', [SA_DataAdminController::class, 'update'])->name('super_admin.data_admin.update');
+    Route::delete('/data_admin/{id}', [SA_DataAdminController::class, 'destroy'])->name('super_admin.data_admin.destroy');
+    Route::post('/data_admin', [SA_DataAdminController::class, 'store'])->name('super_admin.data_admin.store');
+
+    Route::post('/school-fees/{fee}/mark-paid-offline',
+        [DataTagihanSiswaAdminController::class, 'markPaidOffline'])
+        ->name('super_admin.school-fees.mark-paid-offline');
+
+    // PDF invoice untuk admin (tanpa guard siswa)
+    Route::get('/transactions/{transaction}/invoice',
+        [TransactionController::class, 'pdfAdmin'])
+        ->name('super_admin.transactions.pdf');
+
+    Route::get('/transactions/{transaction}', [TransactionController::class, 'showAdmin'])
+        ->name('super_admin.transactions.show');
+
+});
+
+
+// ---------------------------
+//
+// {--- Route untuk Admin ---}
+//
+// ---------------------------
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     // Route untuk Dashboard
     Route::get('/', function () {
@@ -197,20 +309,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
 
 });
 
+
+
 Route::get('/dev/send-invoice/{transaction}', [TransactionController::class, 'testSendInvoice'])
     ->middleware(['auth']); // batasi akses
-
-// Route::get('/dev/mailtrap-test', function () {
-//     try {
-//         \Mail::raw('Hello from Albanna (Mailtrap OK)', function ($m) {
-//             $m->to('apa-saja@contoh.com')->subject('Mailtrap connection test');
-//         });
-//         return 'Mailtrap RAW OK';
-//     } catch (\Throwable $e) {
-//         \Log::error('Mailtrap RAW error: '.$e->getMessage());
-//         return 'ERROR: '.$e->getMessage();
-//     }
-//     })->middleware('auth');
 
 // Route untuk Kepala Sekolah
 Route::middleware(['auth', 'kepala_sekolah'])->prefix('kepala_sekolah')->group(function() {

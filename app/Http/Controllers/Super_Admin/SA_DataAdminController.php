@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Super_Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDataAdminRequest;
@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class DataAdminController extends Controller
+class SA_DataAdminController extends Controller
 {
     public function index() {
         $admins = User::where('role', 'admin')
@@ -17,11 +17,11 @@ class DataAdminController extends Controller
                         ->orWhere('role', 'super_admin')
                         ->get();
 
-        return view('admin.data_admin.index', compact('admins'));
+        return view('super_admin.data_admin.index', compact('admins'));
     }
 
     public function create() {
-        return view('admin.data_admin.create');
+        return view('super_admin.data_admin.create');
     }
 
 
@@ -38,7 +38,7 @@ class DataAdminController extends Controller
     public function edit($id) {
         $user = User::findOrFail($id);
 
-        return view('admin.data_admin.edit', compact('user'));
+        return view('super_admin.data_admin.edit', compact('user'));
     }
 
     public function update(UpdateDataAdminRequest $request, $id)

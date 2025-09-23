@@ -25,7 +25,7 @@ class StoreDataAdminRequest extends FormRequest
             'name'     => ['required','string','max:100'],
             'username' => ['required','string','alpha_dash','max:50','unique:users,username'],
             'password' => ['required','string','min:8'],
-            'role'     => ['required','in:admin,kepala_sekolah'],
+            'role'     => ['required','in:super_admin,admin,kepala_sekolah'],
         ];
     }
 

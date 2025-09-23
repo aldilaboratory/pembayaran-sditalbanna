@@ -27,6 +27,7 @@
                           <label for="role">Role</label>
                           <select class="form-select text-black @error('name') is-invalid @enderror" name="role" id="role">
                             <option disabled selected>Pilih Role</option>
+                            <option value="super_admin" @selected($user->role === 'super_admin')>Super Admin</option>
                             <option value="admin" @selected($user->role === 'admin')>Admin</option>
                             <option value="kepala_sekolah" @selected($user->role === 'kepala_sekolah')>Kepala Sekolah</option>
                           </select>

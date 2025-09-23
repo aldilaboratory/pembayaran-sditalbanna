@@ -1,4 +1,4 @@
-<x-admin.layout>
+<x-super_admin.layout>
             <div class="row">
               <div class="col-md-12">
                 {{-- Error Messages --}}
@@ -13,23 +13,27 @@
                 @endif
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Tambah Data Siswa</h4>
-                    <form action="{{ route('admin.data_siswa.store') }}" method="POST">
+                    <h4 class="card-title">Edit Data Siswa</h4>
+                    <form action="{{ route('super_admin.data_siswa.update', $students->id) }}" method="POST">
                       @csrf
+                      @method('PUT')
                       <div class="form-group">
                           <label for="name">Nama Siswa</label>
-                          <input type="text" class="form-control" name="name" id="name" placeholder="Masukkan nama siswa" value="{{ old('name') }}">
+                          <input type="text" class="form-control" name="name" id="name" placeholder="Masukkan nama siswa" value="{{ old('name', $students->nama) }}">
                       </div>
                       <div class="form-group">
                           <label for="nis">NIS</label>
-                          <input type="number" class="form-control" name="nis" id="nis" placeholder="Masukkan NIS" value="{{ old('nis') }}">
-                      </div>
+                          <input type="text" class="form-control" name="nis" id="nis" placeholder="Masukkan NIS" value="{{ old('nis', $students->nis) }}">
+                          <small class="form-text text-muted">
+                              Username dan password login siswa akan otomatis berubah sesuai NIS baru
+                          </small>
+                        </div>
                       <div class="form-group">
                           <label for="class">Kelas</label>
                           <select name="class" id="class" class="form-select text-black form-control">
                             <option disabled selected>Pilih Kelas</option>
                             @foreach ($studentClasses as $class)
-                                <option value="{{ $class->class }}">{{ $class->class }}</option>
+                                <option value="{{ $class->class }}" {{ $students->class_id == $class->id ? 'selected' : '' }}>{{ $class->class }}</option>
                             @endforeach
                           </select>
                       </div>
@@ -38,7 +42,7 @@
                           <select name="school_year" id="school_year" class="form-select text-black">
                             <option disabled selected>Pilih Angkatan</option>
                             @foreach ($schoolYears as $schoolYear)
-                                <option value="{{ $schoolYear->school_year }}">{{ $schoolYear->school_year }}</option>
+                                <option value="{{ $schoolYear->school_year }}" {{ $students->school_year_id == $schoolYear->id ? 'selected' : '' }}>{{ $schoolYear->school_year }}</option>
                             @endforeach
                           </select>
                       </div>
@@ -47,8 +51,16 @@
                           <select name="academic_year" id="academic_year" class="form-select text-black">
                             <option disabled selected>Pilih Tahun Ajaran</option>
                             @foreach ($academicYears as $academicYear)
-                                <option value="{{ $academicYear->academic_year }}">{{ $academicYear->academic_year }}</option>
+                                <option value="{{ $academicYear->academic_year }}" {{ $students->academic_year_id == $academicYear->id ? 'selected' : '' }}>{{ $academicYear->academic_year }}</option>
                             @endforeach
+                          </select>
+                      </div>
+                      <div class="form-group">
+                          <label for="status">Status Siswa</label>
+                          <select name="status" id="status" class="form-select text-black" {{ old('status', $students->nama) }}>
+                            <option disabled selected>Pilih Status Siswa</option>
+                            <option value="aktif" @selected($students->status === 'aktif')>Aktif</option>
+                            <option value="nonaktif" @selected($students->status === 'nonaktif')>Nonaktif</option>
                           </select>
                       </div>
                       {{-- Info Alert --}}
@@ -64,11 +76,11 @@
                                 <li>Password: siswa310136</li>
                             </ul>
                         </div>
-                      <a href="{{ route('admin.data_siswa') }}" class="btn btn-light">Kembali</a>
+                      <a href="{{ route('super_admin.data_siswa') }}" class="btn btn-light">Kembali</a>
                       <button type="submit" class="btn btn-primary mx-2">Simpan</button>
                     </form>
                   </div>
                 </div>
               </div>
             </div>
-</x-admin.layout>
+</x-super_admin.layout>

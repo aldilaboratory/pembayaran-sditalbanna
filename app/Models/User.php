@@ -48,6 +48,10 @@ class User extends Authenticatable
         return $this->hasOne(Student::class, 'user_id', 'id');
     }
 
+    public function isSuperAdmin() {
+        return $this->role === 'super_admin';
+    }
+
     public function isAdmin() {
         return $this->role === 'admin';
     }

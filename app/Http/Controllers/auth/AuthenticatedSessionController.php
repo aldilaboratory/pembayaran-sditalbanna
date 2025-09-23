@@ -31,6 +31,8 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::user()->isAdmin()) {
             return redirect()->intended(route('admin.dashboard'));
+        } elseif (Auth::user()->isSuperAdmin()) {
+            return redirect()->intended(route('super_admin.dashboard'));
         } elseif (Auth::user()->isSiswa()) {
             return redirect()->intended(route('siswa.dashboard'));
         } elseif (Auth::user()->isKepalaSekolah()) {
