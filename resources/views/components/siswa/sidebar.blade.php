@@ -25,5 +25,11 @@
                 <span class="menu-title">Riwayat Pembayaran</span>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('siswa.password.edit') }}">
+                <i class="mdi mdi-lock-reset menu-icon"></i>
+                <span class="menu-title">Ubah Password</span>
+              </a>
+            </li>
           </ul>
         </nav>

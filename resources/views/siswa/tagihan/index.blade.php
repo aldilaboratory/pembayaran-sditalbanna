@@ -16,13 +16,13 @@
                         <h2 class="text-white mb-0">
                           Rp{{ number_format($totalBelumLunas, 0, ',', '.') }}
                         </h2>
-                        <p class="text-white-50 mb-0">Total Nominal</p>
+                        <p class="text-white mb-0">Total Nominal</p>
                       </div>
                       <div class="col-md-6">
                         <h2 class="text-white mb-0">
                           {{ $jumlahTagihanBelumLunas }}
                         </h2>
-                        <p class="text-white-50 mb-0">Jumlah Tagihan</p>
+                        <p class="text-white mb-0">Jumlah Tagihan</p>
                       </div>
                     </div>
                   </div>

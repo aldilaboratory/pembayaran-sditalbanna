@@ -4,7 +4,6 @@
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Data Admin</h4>
-                    <a class="btn btn-primary mb-3" href="{{ route('admin.data_admin.create') }}">+ Tambah Admin Baru</a>
                     <div class="table-responsive">
                       <table class="table table-bordered" id="dataTable">
                         <thead>
@@ -42,12 +41,7 @@
                               {{ $admin->role }}
                             </td>
                             <td class="text-center">
-                              <a href="{{ route('admin.data_admin.edit', $admin->id) }}" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
-                              <form id="delete-form-{{ $admin->id }}" action="{{ route('admin.data_admin.destroy', $admin->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button" class="btn btn-danger btn-sm delete-btn" data-id="{{ $admin->id }}" data-name="Pengguna {{ $admin->name }}"><i class="mdi mdi-delete align-middle"></i> Hapus</button>
-                              </form>
+                              -
                             </td>
                           </tr>
                           @endforeach

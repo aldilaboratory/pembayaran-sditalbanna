@@ -4,13 +4,13 @@
           <div
             class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100"
           >
-            <a class="navbar-brand brand-logo img-fluid" href="index.html"
+            <a class="navbar-brand brand-logo img-fluid" href="{{ route('admin.dashboard') }}"
               ><img src="{{ asset('images/albanna.png') }}" alt="logo"
             /></a>
-            <a class="navbar-brand brand-logo-white" href="index.html"
+            <a class="navbar-brand brand-logo-white" href="{{ route('admin.dashboard') }}"
               ><img src="{{ asset('images/albanna.png') }}" alt="logo"
             /></a>
-            <a class="navbar-brand brand-logo-mini" href="index.html"
+            <a class="navbar-brand brand-logo-mini" href="{{ route('admin.dashboard') }}"
               ><img src="{{ asset('images/albanna.png') }}" alt="logo"
             /></a>
             <button

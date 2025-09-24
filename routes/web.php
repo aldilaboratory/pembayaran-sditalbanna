@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Siswa\PasswordController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 // Route untuk Siswa
@@ -109,6 +110,9 @@ Route::middleware(['auth', 'siswa'])->prefix('siswa')->group(function() {
 
     Route::get('/tagihan', [TagihanController::class, 'index'])->name('siswa.tagihan.index');
     Route::get('/riwayat-pembayaran', [PembayaranController::class, 'index'])->name('siswa.pembayaran.index');
+
+    Route::get('/ubah-password',  [PasswordController::class, 'edit'])->name('siswa.password.edit');
+    Route::put('/ubah-password',  [PasswordController::class, 'update'])->name('siswa.password.update');
 
     // Routes pembayaran - perbaiki parameter
     Route::post('/tagihan/{tagihanId}/process', [TagihanController::class, 'process'])->name("checkout-process");
@@ -288,12 +292,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::post('/data_tahun_ajaran', [DataTahunAjaranController::class, 'store'])->name('admin.data_tahun_ajaran.store');
 
     // Route untuk Data Admin
-    Route::get('/data_admin', [DataAdminController::class, 'index'])->name('admin.data_admin');
-    Route::get('/data_admin/create', [DataAdminController::class, 'create'])->name('admin.data_admin.create');
-    Route::get('/data_admin/{id}/edit', [DataAdminController::class, 'edit'])->name('admin.data_admin.edit');
-    Route::put('/data_admin/{id}', [DataAdminController::class, 'update'])->name('admin.data_admin.update');
-    Route::delete('/data_admin/{id}', [DataAdminController::class, 'destroy'])->name('admin.data_admin.destroy');
-    Route::post('/data_admin', [DataAdminController::class, 'store'])->name('admin.data_admin.store');
+    Route::get('/data_admin', [DataAdminController::class, 'index'])->name('admin.data_admin'); 
 
     Route::post('/school-fees/{fee}/mark-paid-offline',
         [DataTagihanSiswaAdminController::class, 'markPaidOffline'])
