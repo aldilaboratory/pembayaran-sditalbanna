@@ -22,7 +22,8 @@
                       </div>
                       <div class="form-group">
                           <label for="nis">NIS</label>
-                          <input type="number" class="form-control" name="nis" id="nis" placeholder="Masukkan NIS" value="{{ old('nis') }}">
+                          <input type="text" class="form-control" name="nis" id="nis" placeholder="Masukkan NIS" value="{{ old('nis') }}" minlength="10" maxlength="13" inputmode="numeric" >
+                          @error('nis') <div class="invalid-feedback">{{ $message }}</div> @enderror
                       </div>
                       <div class="form-group">
                           <label for="class">Kelas</label>

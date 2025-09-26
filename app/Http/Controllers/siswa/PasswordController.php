@@ -23,7 +23,7 @@ class PasswordController extends Controller
         // Validasi: current_password harus cocok, password baru wajib konfirmasi
         $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password'         => ['required', 'confirmed', PasswordRule::min(8)->mixedCase()->numbers()],
+            'password'         => ['required', 'confirmed', PasswordRule::min(8)->numbers()],
         ], [
             'current_password.current_password' => 'Password saat ini tidak sesuai.',
             'password.confirmed'                => 'Konfirmasi password baru tidak sama.',

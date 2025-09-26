@@ -244,6 +244,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
     Route::put('/data_siswa/{id}', [DataSiswaAdminController::class, 'update'])->name('admin.data_siswa.update');
     Route::delete('/data_siswa/{id}', [DataSiswaAdminController::class, 'destroy'])->name('admin.data_siswa.destroy');
     Route::post('/data_siswa', [DataSiswaAdminController::class, 'store'])->name('admin.data_siswa.store');
+    Route::get('/data_siswa/{student}/password', [DataSiswaAdminController::class, 'editPassword'])->name('admin.data_siswa.editPassword');
+    Route::put('/data_siswa/{student}/password', [DataSiswaAdminController::class, 'updatePassword'])->name('admin.data_siswa.updatePassword');
 
     Route::get('/profil_siswa/{student}/edit', [ProfilSiswaController::class, 'edit'])->name('admin.profil_siswa.edit');
     Route::put('/profil_siswa/{student}', [ProfilSiswaController::class, 'update'])->name('admin.profil_siswa.update');

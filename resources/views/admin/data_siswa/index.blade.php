@@ -52,6 +52,7 @@
                               @endif
                             </td>
                             <td class="text-center">
+                              <a href="{{ route('admin.data_siswa.editPassword', $student->id) }}" class="btn btn-light btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Ubah Password</a>
                               <a href="{{ route('admin.data_siswa.edit', $student->id) }}" class="btn btn-info btn-sm"><i class="mdi mdi-square-edit-outline align-middle"></i> Edit</a>
                               <form id="delete-form-{{ $student->id }}" action="{{ route('admin.data_siswa.destroy', $student->id) }}" method="POST" class="d-inline">
                                 @csrf
