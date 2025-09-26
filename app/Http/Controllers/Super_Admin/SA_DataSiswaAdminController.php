@@ -14,6 +14,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class SA_DataSiswaAdminController extends Controller
 {
@@ -175,6 +176,36 @@ class SA_DataSiswaAdminController extends Controller
             return redirect()->back()
                              ->with('error', 'Gagal menghapus data siswa: ' . $e->getMessage());
         }
+    }
+
+    public function editPassword(Student $student)
+    {
+        // pakai nama variabel yang konsisten dengan blade Anda
+        $students = $student; 
+        return view('super_admin.data_siswa.edit_password', compact('students'));
+    }
+
+    public function updatePassword(Request $request, Student $student)
+    {
+        $validated = $request->validate([
+            'password' => ['required','string','min:8','confirmed'], // butuh field password_confirmation
+        ], [
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'password.min'       => 'Password minimal 8 karakter.',
+        ]);
+
+        $user = $student->user;
+        if (!$user) {
+            return back()->with('error', 'Akun user untuk siswa ini tidak ditemukan.');
+        }
+
+        $user->password = Hash::make($validated['password']);
+        // Opsional: paksa sesi login ulang di device lain
+        $user->setRememberToken(Str::random(60));
+        $user->save();
+
+        return redirect()->route('super_admin.data_siswa')
+            ->with('success', 'Password login siswa berhasil diubah.');
     }
 
     // Method untuk generate password default

@@ -155,6 +155,8 @@ Route::middleware(['auth', 'super_admin'])->prefix('super_admin')->group(functio
     Route::put('/data_siswa/{id}', [SA_DataSiswaAdminController::class, 'update'])->name('super_admin.data_siswa.update');
     Route::delete('/data_siswa/{id}', [SA_DataSiswaAdminController::class, 'destroy'])->name('super_admin.data_siswa.destroy');
     Route::post('/data_siswa', [SA_DataSiswaAdminController::class, 'store'])->name('super_admin.data_siswa.store');
+    Route::get('/data_siswa/{student}/password', [SA_DataSiswaAdminController::class, 'editPassword'])->name('super_admin.data_siswa.editPassword');
+    Route::put('/data_siswa/{student}/password', [SA_DataSiswaAdminController::class, 'updatePassword'])->name('super_admin.data_siswa.updatePassword');
 
     Route::get('/profil_siswa/{student}/edit', [SA_ProfilSiswaController::class, 'edit'])->name('super_admin.profil_siswa.edit');
     Route::put('/profil_siswa/{student}', [SA_ProfilSiswaController::class, 'update'])->name('super_admin.profil_siswa.update');
