@@ -21,8 +21,22 @@
                           <input type="text" class="form-control" name="name" id="name" placeholder="Masukkan nama siswa" value="{{ old('name') }}">
                       </div>
                       <div class="form-group">
-                          <label for="nis">NIS</label>
-                          <input type="text" class="form-control" name="nis" id="nis" placeholder="Masukkan NIS" value="{{ old('nis') }}" minlength="10" maxlength="13" inputmode="numeric" >
+                          <label for="name">NIS</label>
+                          <input
+                            type="text"
+                            name="nis"
+                            id="nis"
+                            class="form-control @error('nis') is-invalid @enderror"
+                            value="{{ old('nis') }}"
+                            placeholder="Masukkan NIS"
+                            inputmode="numeric"            {{-- munculkan keypad angka di mobile --}}
+                            autocomplete="off"
+                            maxlength="5"                 {{-- batasi panjang di UI --}}
+                            pattern="[0-9]{5}"         {{-- hanya angka, 5 digit --}}
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,5);"  {{-- filter non-digit & potong --}}
+                            required
+                          >
+                          <small class="text-muted">Hanya angka 0–9, panjang 5 digit.</small>
                           @error('nis') <div class="invalid-feedback">{{ $message }}</div> @enderror
                       </div>
                       <div class="form-group">

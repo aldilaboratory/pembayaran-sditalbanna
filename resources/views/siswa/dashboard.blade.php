@@ -29,10 +29,10 @@
                         <td>Kelas</td>
                         <td>{{ $user->student->studentClass->class }}</td>
                       </tr>
-                      <tr>
+                      {{-- <tr>
                         <td>Tahun Ajaran</td>
                         <td>{{ $user->student->academicYear->academic_year }}</td>
-                      </tr>
+                      </tr> --}}
                       <tr>
                         <td>Angkatan</td>
                         <td>{{ $user->student->schoolYear->school_year }}</td>

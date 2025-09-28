@@ -31,7 +31,7 @@ class UpdateStudentsRequest extends FormRequest
             'nis' => [
                 'required',
                 'string',
-                'max:20',
+                'max:5',
                 Rule::unique('students', 'nis')->ignore($studentId),
                 Rule::unique('users', 'username')->ignore($this->getStudentUserId($studentId)),
             ],

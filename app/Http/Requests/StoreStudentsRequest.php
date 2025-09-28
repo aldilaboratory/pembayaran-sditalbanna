@@ -23,7 +23,7 @@ class StoreStudentsRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:50',
-            'nis' => 'required|string|max:20|unique:students,nis|unique:users,username',
+            'nis' => 'required|string|max:5|unique:students,nis|unique:users,username',
             'class' => 'required|exists:student_classes,class',
             'school_year' => 'required|exists:school_years,school_year',
             'academic_year' => 'required|exists:academic_years,academic_year',

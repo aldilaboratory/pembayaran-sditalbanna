@@ -123,7 +123,7 @@ class SA_DataSiswaAdminController extends Controller
             $students->user->update([
                 'name' => $request->name,
                 'username' => $request->nis, // Username ikut berubah sesuai NIS baru
-                'password' => Hash::make($this->generateDefaultPassword($request->nis)), // Set password baru dengan format "siswa + 6 digit terakhir NIS" 
+                'password' => Hash::make($this->generateDefaultPassword($request->nis)), // Set password baru dengan format "siswa + NIS" 
             ]);
 
             // Update data Siswa
@@ -212,6 +212,7 @@ class SA_DataSiswaAdminController extends Controller
     private function generateDefaultPassword($nis)
     {
         // Format: siswa + 6 digit terakhir NIS
-        return 'siswa' . substr($nis, -6);
+        // return 'siswa' . substr($nis, -6);
+        return 'siswa' . $nis;
     }
 }

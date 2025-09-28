@@ -23,7 +23,20 @@
                       </div>
                       <div class="form-group">
                           <label for="nis">NIS</label>
-                          <input type="text" class="form-control" name="nis" id="nis" placeholder="Masukkan NIS" value="{{ old('nis', $students->nis) }}">
+                          <input
+                            type="text"
+                            name="nis"
+                            id="nis"
+                            class="form-control @error('nis') is-invalid @enderror"
+                            value="{{ old('nis', $students->nis) }}"
+                            placeholder="Masukkan NIS"
+                            inputmode="numeric"            {{-- munculkan keypad angka di mobile --}}
+                            autocomplete="off"
+                            maxlength="5"                 {{-- batasi panjang di UI --}}
+                            pattern="[0-9]{5}"         {{-- hanya angka, 5 digit --}}
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,5);"  {{-- filter non-digit & potong --}}
+                            required
+                          >
                           <small class="form-text text-muted">
                               Username dan password login siswa akan otomatis berubah sesuai NIS baru
                           </small>
