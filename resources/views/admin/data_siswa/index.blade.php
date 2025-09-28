@@ -5,6 +5,8 @@
                   <div class="card-body">
                     <h4 class="card-title">Data Siswa</h4>
                     <a href="{{ route('admin.data_siswa.create') }}" class="btn btn-primary mb-3">+ Tambah Data Siswa</a>
+                    <a href="{{ route('admin.kenaikan.index') }}" class="btn btn-secondary mb-3">↑ Naikkan Kelas Siswa</a>
+
                     <div class="table-responsive mt-3">
                       <table class="table table-bordered" id="dataTable">
                         <thead>
@@ -24,9 +26,9 @@
                             <th class="text-center">
                               Angkatan
                             </th>
-                            <th class="text-center">
+                            {{-- <th class="text-center">
                               Tahun Ajaran
-                            </th>
+                            </th> --}}
                             <th class="text-center">
                               Status
                             </th>
@@ -43,10 +45,12 @@
                             <td class="text-center">{{ $student->nis }}</td>
                             <td>{{ $student->studentClass->class }}</td>
                             <td class="text-center">{{ $student->schoolYear->school_year }}</td>
-                            <td class="text-center">{{ $student->academicYear->academic_year }}</td>
+                            {{-- <td class="text-center">{{ $student->academicYear->academic_year }}</td> --}}
                             <td class="text-center">
                               @if ($student->status === 'aktif')
                                 <label class="badge badge-success">{{ $student->status }}</label>
+                              @elseif ($student->status === 'lulus')
+                                <label class="badge badge-secondary">{{ $student->status }}</label>
                               @else
                                 <label class="badge badge-danger">{{ $student->status }}</label>
                               @endif

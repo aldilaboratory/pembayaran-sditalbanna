@@ -18,7 +18,7 @@
                       @csrf
                       <div class="form-group">
                           <label for="name">Nama Siswa</label>
-                          <input type="text" class="form-control" name="name" id="name" placeholder="Masukkan nama siswa" value="{{ old('name') }}">
+                          <input type="text" class="form-control" name="name" id="name" placeholder="Masukkan nama siswa" value="{{ old('name') }}" onkeydown="return /[a-z]/i.test(event.key)">
                       </div>
                       <div class="form-group">
                           <label for="name">NIS</label>
@@ -71,12 +71,12 @@
                             <strong>Informasi:</strong>
                             <ul class="mb-0 mt-2">
                                 <li>Akun login siswa akan otomatis dibuat dengan username = NIS</li>
-                                <li>Password default = "siswa" + 6 digit terakhir NIS</li>
+                                <li>Password default = "siswa" + NIS</li>
                                 <li>Data pribadi lainnya dapat dilengkapi kemudian</li>
                                 <br>
                                 <li>Contoh kredensial login</li>
-                                <li>Username: 2021090310136</li>
-                                <li>Password: siswa310136</li>
+                                <li>Username: 89765</li>
+                                <li>Password: siswa89765</li>
                             </ul>
                         </div>
                       <a href="{{ route('admin.data_siswa') }}" class="btn btn-light">Kembali</a>

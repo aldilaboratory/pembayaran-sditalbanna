@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\KenaikanKelasController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProfileController;
@@ -251,6 +252,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
 
     Route::get('/profil_siswa/{student}/edit', [ProfilSiswaController::class, 'edit'])->name('admin.profil_siswa.edit');
     Route::put('/profil_siswa/{student}', [ProfilSiswaController::class, 'update'])->name('admin.profil_siswa.update');
+
+    Route::get('/kenaikan-kelas', [KenaikanKelasController::class, 'index'])
+    ->name('admin.kenaikan.index');
+
+    Route::get('/kenaikan-kelas/students', [KenaikanKelasController::class, 'students'])
+    ->name('admin.kenaikan.students'); // AJAX: ambil siswa aktif per kelas
+
+    Route::post('/kenaikan-kelas/promote', [KenaikanKelasController::class, 'promote'])
+    ->name('admin.kenaikan.promote');
 
     // Route untuk Data Tagihan Siswa
     Route::get('/data_tagihan_siswa', [DataTagihanSiswaAdminController::class, 'index'])->name('admin.data_tagihan_siswa');

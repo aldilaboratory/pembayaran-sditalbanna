@@ -59,7 +59,7 @@
                             @endforeach
                           </select>
                       </div>
-                      <div class="form-group">
+                      {{-- <div class="form-group">
                           <label for="academic_year">Tahun Ajaran</label>
                           <select name="academic_year" id="academic_year" class="form-select text-black">
                             <option disabled selected>Pilih Tahun Ajaran</option>
@@ -67,7 +67,7 @@
                                 <option value="{{ $academicYear->academic_year }}" {{ $students->academic_year_id == $academicYear->id ? 'selected' : '' }}>{{ $academicYear->academic_year }}</option>
                             @endforeach
                           </select>
-                      </div>
+                      </div> --}}
                       <div class="form-group">
                           <label for="status">Status Siswa</label>
                           <select name="status" id="status" class="form-select text-black" {{ old('status', $students->nama) }}>
