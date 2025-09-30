@@ -33,7 +33,7 @@ class StoreSchoolFeesRequest extends FormRequest
             ],
             'jumlah'         => ['required','integer','min:1'],
             'bulan'          => ['required','integer','between:1,12'],
-            'jatuh_tempo'    => ['required','date'],
+            'jatuh_tempo'    => ['required','date','after_or_equal:'.now()->toDateString()],
             'student_ids'    => ['required','array','min:1'],
             'student_ids.*'  => ['integer','exists:students,id'],
         ];
@@ -82,6 +82,7 @@ class StoreSchoolFeesRequest extends FormRequest
             'tahun_ajaran.exists' => 'Tahun ajaran tidak valid',
             'jatuh_tempo.required' => 'Tanggal jatuh tempo wajib diisi',
             'jatuh_tempo.date' => 'Format tanggal jatuh tempo tidak valid',
+            'jatuh_tempo.after_or_equal' => 'Tanggal jatuh tempo tidak boleh di masa lalu.',
             'student_ids.required' => 'Pilih minimal satu siswa.',
             'student_ids.min'      => 'Pilih minimal satu siswa.',
         ];
