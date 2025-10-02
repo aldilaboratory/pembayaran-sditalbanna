@@ -18,7 +18,11 @@
                       @csrf
                       <div class="form-group">
                           <label for="name">Nama Siswa</label>
-                          <input type="text" class="form-control" name="name" id="name" placeholder="Masukkan nama siswa" value="{{ old('name') }}" onkeydown="return /[a-z]/i.test(event.key)">
+                          <input type="text" class="form-control" name="name" id="name" placeholder="Masukkan nama siswa" value="{{ old('name') }}"
+                            onkeydown="
+                            if (/[a-z\s]/i.test(event.key)) return true;
+                            const ok=['Backspace','Delete','ArrowLeft','ArrowRight','Tab','Home','End'];
+                            return ok.includes(event.key);">
                       </div>
                       <div class="form-group">
                           <label for="name">NIS</label>

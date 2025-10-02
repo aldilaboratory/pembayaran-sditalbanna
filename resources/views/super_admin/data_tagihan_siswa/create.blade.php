@@ -86,7 +86,7 @@
               <div class="col-md-4">
                 <label for="jatuh_tempo" class="form-label">Jatuh Tempo</label>
                 <input type="date" name="jatuh_tempo" id="jatuh_tempo" class="form-control @error('jatuh_tempo') is-invalid @enderror"
-                       value="{{ old('jatuh_tempo', date('Y-m-d')) }}">
+                       value="{{ old('jatuh_tempo', date('Y-m-d')) }}" min="{{ now()->toDateString() }}">
                 @error('jatuh_tempo') <div class="invalid-feedback">{{ $message }}</div> @enderror
               </div>
             </div>

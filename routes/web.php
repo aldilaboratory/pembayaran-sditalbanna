@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Siswa\PasswordController;
+use App\Http\Controllers\Super_Admin\SA_KenaikanKelasController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 // Route untuk Siswa
@@ -162,6 +163,13 @@ Route::middleware(['auth', 'super_admin'])->prefix('super_admin')->group(functio
     Route::get('/profil_siswa/{student}/edit', [SA_ProfilSiswaController::class, 'edit'])->name('super_admin.profil_siswa.edit');
     Route::put('/profil_siswa/{student}', [SA_ProfilSiswaController::class, 'update'])->name('super_admin.profil_siswa.update');
 
+    Route::get('/kenaikan-kelas', [SA_KenaikanKelasController::class, 'index'])
+    ->name('super_admin.kenaikan.index');
+    Route::get('/kenaikan-kelas/students', [SA_KenaikanKelasController::class, 'students'])
+    ->name('super_admin.kenaikan.students'); // AJAX: ambil siswa aktif per kelas
+    Route::post('/kenaikan-kelas/promote', [SA_KenaikanKelasController::class, 'promote'])
+    ->name('super_admin.kenaikan.promote');
+
     // Route untuk Data Tagihan Siswa
     Route::get('/data_tagihan_siswa', [SA_DataTagihanSiswaAdminController::class, 'index'])->name('super_admin.data_tagihan_siswa');
     Route::get('/data_tagihan_siswa/create', [SA_DataTagihanSiswaAdminController::class, 'create'])->name('super_admin.data_tagihan_siswa.create');
@@ -255,10 +263,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function() {
 
     Route::get('/kenaikan-kelas', [KenaikanKelasController::class, 'index'])
     ->name('admin.kenaikan.index');
-
     Route::get('/kenaikan-kelas/students', [KenaikanKelasController::class, 'students'])
     ->name('admin.kenaikan.students'); // AJAX: ambil siswa aktif per kelas
-
     Route::post('/kenaikan-kelas/promote', [KenaikanKelasController::class, 'promote'])
     ->name('admin.kenaikan.promote');
 

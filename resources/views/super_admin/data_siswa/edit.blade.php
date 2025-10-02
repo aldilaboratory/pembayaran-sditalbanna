@@ -23,7 +23,20 @@
                       </div>
                       <div class="form-group">
                           <label for="nis">NIS</label>
-                          <input type="text" class="form-control" name="nis" id="nis" placeholder="Masukkan NIS" value="{{ old('nis', $students->nis) }}">
+                          <input
+                            type="text"
+                            name="nis"
+                            id="nis"
+                            class="form-control @error('nis') is-invalid @enderror"
+                            value="{{ old('nis', $students->nis) }}"
+                            placeholder="Masukkan NIS"
+                            inputmode="numeric"            {{-- munculkan keypad angka di mobile --}}
+                            autocomplete="off"
+                            maxlength="5"                 {{-- batasi panjang di UI --}}
+                            pattern="[0-9]{5}"         {{-- hanya angka, 5 digit --}}
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,5);"  {{-- filter non-digit & potong --}}
+                            required
+                          >
                           <small class="form-text text-muted">
                               Username dan password login siswa akan otomatis berubah sesuai NIS baru
                           </small>
@@ -46,7 +59,7 @@
                             @endforeach
                           </select>
                       </div>
-                      <div class="form-group">
+                      {{-- <div class="form-group">
                           <label for="academic_year">Tahun Ajaran</label>
                           <select name="academic_year" id="academic_year" class="form-select text-black">
                             <option disabled selected>Pilih Tahun Ajaran</option>
@@ -54,7 +67,7 @@
                                 <option value="{{ $academicYear->academic_year }}" {{ $students->academic_year_id == $academicYear->id ? 'selected' : '' }}>{{ $academicYear->academic_year }}</option>
                             @endforeach
                           </select>
-                      </div>
+                      </div> --}}
                       <div class="form-group">
                           <label for="status">Status Siswa</label>
                           <select name="status" id="status" class="form-select text-black" {{ old('status', $students->nama) }}>
@@ -68,12 +81,12 @@
                             <strong>Informasi:</strong>
                             <ul class="mb-0 mt-2">
                                 <li>Akun login siswa akan otomatis dibuat dengan username = NIS</li>
-                                <li>Password default = "siswa" + 6 digit terakhir NIS</li>
+                                <li>Password default = "siswa" + NIS</li>
                                 <li>Data pribadi lainnya dapat dilengkapi kemudian</li>
                                 <br>
                                 <li>Contoh kredensial login</li>
-                                <li>Username: 2021090310136</li>
-                                <li>Password: siswa310136</li>
+                                <li>Username: 89765</li>
+                                <li>Password: siswa89765</li>
                             </ul>
                         </div>
                       <a href="{{ route('super_admin.data_siswa') }}" class="btn btn-light">Kembali</a>

@@ -14,6 +14,7 @@ class KS_DataAdminController extends Controller
     public function index() {
         $admins = User::where('role', 'admin')
                         ->orWhere('role', 'kepala_sekolah')
+                        ->orWhere('role', 'super_admin')
                         ->get();
 
         return view('kepala_sekolah.data_admin.index', compact('admins'));
