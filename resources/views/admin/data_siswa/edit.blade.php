@@ -81,7 +81,7 @@
                             <strong>Informasi:</strong>
                             <ul class="mb-0 mt-2">
                                 <li>Akun login siswa akan otomatis dibuat dengan username = NIS</li>
-                                <li>Password default = "siswa" + 6 digit terakhir NIS</li>
+                                <li>Password default = "siswa" + NIS</li>
                                 <li>Data pribadi lainnya dapat dilengkapi kemudian</li>
                                 <br>
                                 <li>Contoh kredensial login</li>

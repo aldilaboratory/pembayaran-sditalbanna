@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 class DataSiswaAdminController extends Controller
 {
     public function index() {
-        $students = Student::with(['studentClass', 'schoolYear', 'academicYear'])->get();
+        $students = Student::with(['studentClass', 'schoolYear'])->get();
 
         return view('admin.data_siswa.index', compact('students'));
     }
@@ -27,9 +27,9 @@ class DataSiswaAdminController extends Controller
     public function create() {
         $studentClasses = StudentClass::all();
         $schoolYears = SchoolYear::all();
-        $academicYears = AcademicYear::all();
+        // $academicYears = AcademicYear::all();
 
-        return view('admin.data_siswa.create', compact('studentClasses', 'schoolYears', 'academicYears'));
+        return view('admin.data_siswa.create', compact('studentClasses', 'schoolYears'));
     }
 
     public function store(StoreStudentsRequest $request) {
@@ -39,7 +39,7 @@ class DataSiswaAdminController extends Controller
             // Mencari ID berdasarkan value yang dipilih
             $classId = StudentClass::where('class', $request->class)->first()->id;
             $schoolYearId = SchoolYear::where('school_year', $request->school_year)->first()->id;
-            $academicYearId = AcademicYear::where('academic_year', $request->academic_year)->first()->id;
+            // $academicYearId = AcademicYear::where('academic_year', $request->academic_year)->first()->id;
 
             if (!$classId) {
                 throw new \Exception('Kelas "' . $request->class . '" tidak ditemukan');
@@ -47,9 +47,9 @@ class DataSiswaAdminController extends Controller
             if (!$schoolYearId) {
                 throw new \Exception('School Year "' . $request->school_year . '" tidak ditemukan');
             }
-            if (!$academicYearId) {
-                throw new \Exception('Academic Year "' . $request->academic_year . '" tidak ditemukan');
-            }
+            // if (!$academicYearId) {
+            //     throw new \Exception('Academic Year "' . $request->academic_year . '" tidak ditemukan');
+            // }
 
             // Generate data User dengan username menggunakan NIS
             $user = User::create([
@@ -66,7 +66,7 @@ class DataSiswaAdminController extends Controller
                 'user_id' => $user->id, // Auto binding ke user
                 'class_id' => $classId,
                 'school_year_id' => $schoolYearId,
-                'academic_year_id' => $academicYearId,
+                // 'academic_year_id' => $academicYearId,
                 'status' => 'aktif',
             ]);
 
@@ -94,9 +94,9 @@ class DataSiswaAdminController extends Controller
 
         $studentClasses = StudentClass::all();
         $schoolYears = SchoolYear::all();
-        $academicYears = AcademicYear::all();
+        // $academicYears = AcademicYear::all();
 
-        return view('admin.data_siswa.edit', compact('students', 'studentClasses', 'schoolYears', 'academicYears'));
+        return view('admin.data_siswa.edit', compact('students', 'studentClasses', 'schoolYears'));
     }
 
     public function update(UpdateStudentsRequest $request, $id) {
@@ -107,7 +107,7 @@ class DataSiswaAdminController extends Controller
         try {
             $classId = StudentClass::where('class', $request->class)->first()->id;
             $schoolYearId = SchoolYear::where('school_year', $request->school_year)->first()->id;
-            $academicYearId = AcademicYear::where('academic_year', $request->academic_year)->first()->id;
+            // $academicYearId = AcademicYear::where('academic_year', $request->academic_year)->first()->id;
 
             if (!$classId) {
                 throw new \Exception('Kelas "' . $request->class . '" tidak ditemukan');
@@ -115,9 +115,9 @@ class DataSiswaAdminController extends Controller
             if (!$schoolYearId) {
                 throw new \Exception('School Year "' . $request->school_year . '" tidak ditemukan');
             }
-            if (!$academicYearId) {
-                throw new \Exception('Academic Year "' . $request->academic_year . '" tidak ditemukan');
-            }
+            // if (!$academicYearId) {
+            //     throw new \Exception('Academic Year "' . $request->academic_year . '" tidak ditemukan');
+            // }
 
             // Update data User (sinkronisasi username dengan NIS)
             $students->user->update([
@@ -132,7 +132,7 @@ class DataSiswaAdminController extends Controller
                 'nis' => $request->nis,
                 'class_id' => $classId,
                 'school_year_id' => $schoolYearId,
-                'academic_year_id' => $academicYearId,
+                // 'academic_year_id' => $academicYearId,
                 'status' => $request->status,
             ]);
 

@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(StudentSeeder::class);
+
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
@@ -21,12 +23,12 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        User::create([
-            'name' => 'Rendi Tigor',
-            'username' => 'admin1',
-            'password' => 'admin123',
-            'role' => 'admin',
-        ]);
+        // User::create([
+        //     'name' => 'Rendi Tigor',
+        //     'username' => 'admin1',
+        //     'password' => 'admin123',
+        //     'role' => 'admin',
+        // ]);
 
         // Student::create([
         //     'nama' => 'Aldi Pradana',

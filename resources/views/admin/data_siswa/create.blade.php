@@ -57,7 +57,7 @@
                             @endforeach
                           </select>
                       </div>
-                      <div class="form-group">
+                      {{-- <div class="form-group">
                           <label for="academic_year">Tahun Ajaran</label>
                           <select name="academic_year" id="academic_year" class="form-select text-black">
                             <option disabled selected>Pilih Tahun Ajaran</option>
@@ -65,7 +65,7 @@
                                 <option value="{{ $academicYear->academic_year }}">{{ $academicYear->academic_year }}</option>
                             @endforeach
                           </select>
-                      </div>
+                      </div> --}}
                       {{-- Info Alert --}}
                         <div class="alert alert-info">
                             <strong>Informasi:</strong>

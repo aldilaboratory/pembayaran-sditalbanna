@@ -26,7 +26,7 @@ class StoreStudentsRequest extends FormRequest
             'nis' => 'required|string|max:5|unique:students,nis|unique:users,username',
             'class' => 'required|exists:student_classes,class',
             'school_year' => 'required|exists:school_years,school_year',
-            'academic_year' => 'required|exists:academic_years,academic_year',
+            // 'academic_year' => 'required|exists:academic_years,academic_year',
         ];
     }
 
@@ -40,8 +40,8 @@ class StoreStudentsRequest extends FormRequest
             'class.exists' => 'Kelas yang dipilih tidak valid',
             'school_year.required' => 'Angkatan harus dipilih',
             'school_year.exists' => 'Angkatan yang dipilih tidak valid',
-            'academic_year.required' => 'Tahun ajaran harus dipilih',
-            'academic_year.exists' => 'Tahun ajaran yang dipilih tidak valid',
+            // 'academic_year.required' => 'Tahun ajaran harus dipilih',
+            // 'academic_year.exists' => 'Tahun ajaran yang dipilih tidak valid',
         ];
     }
 }
